@@ -1,0 +1,37 @@
+map 中 会 进行数据分区的指定  kv p  p 是分区信息 排序分区
+
+	进入缓冲区      分区  再次排序（分区内排序）  spill to disk 溢出到磁盘 128M 成小文件（内部 分区有序）
+						在溢出到磁盘中的时候 会有序的 排序一次   在合成大文件 
+
+	每个map task都有一个内存缓冲区，存储着map的输出结果，当缓冲区快满的时候需要将缓冲区的数据以一个临时文件的方式存放到磁盘，
+	当整个map task结束后在对磁盘中这个map task产生的所有临时文件做一个合并(合并之前会有一个· 排序   
+		其实 这些文件都是按照文件名有序的)，生成最终的正式输出文件
+					在输出文件 到达磁盘的时候  压缩 是不会默认的  要手动设置 
+	
+	压缩 
+	mapreduce.map.output.compress  设置为 true
+	mapreduce.map.output.codec   压缩库
+	
+	reducer 如何知道要从哪台机 器取得 map 输出呢？
+	map  任务成功完成后 ， 它们会使用心跳机制通知它们的 application master。因此， 对千指定作业 ， application master 知道 map 输出和主机位置之间 
+	的映射关系。reducer 中的一个线程定期询问 master  以便获取 map  输出主机的位置，直到获得所有输出位置。
+	由千第一个 reducer 可能失败， 因此主机并没有在第一个  reducer 检索到 map 输出时就立即从磁盘上删除它们。相，反主机会等待， 直到 application mas ter 
+	告知它删除 map 输出， 这是作业完成后执行的。
+	呆 map  输出相当小 ｀ 会祧饲制到 reduce  忏 各  JVM  的 内 存
+	
+	
+					
+	报告给 am   然后 reduce拉取数据   merger 快排序  reduce处理
+
+	第二次排序 是因为 reduce 不只处理 一个key 可能是多个key  这次排序是减轻reduce处理数据的压力
+	
+	
+	reduce处理  
+	默认为 五个线程  
+	mapreduce.reduce.shuffle.parallelcopies 
+	
+	复制完所有 map 输出后， reduce 任务进入排序阶段（更恰当的说法是合并阶段， 因为排序是在 map 端进行的）， 这个 阶段将合并 map 输出，维持其顺序排序。 这是
+循环进行的。 比如，如果有 50 个 map 输出，而合并因子是 10(10 为默认设置，由
+mapreduce.task.io.sort.factor属性设置，与map的合并类似），合并将进行5趟。每
+一
+趟将 10 个文件合并成 个文件，因此最后有5个中间文件。
