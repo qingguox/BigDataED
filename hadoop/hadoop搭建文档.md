@@ -153,7 +153,7 @@ cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 -------------------------
 >
 	进入hadoop-2.6.5/etc目录 (可以通过变量：cd $HADOOP_HOME)
-	拷贝hadoop 为 hadoop-full
+	拷贝hadoop 为 hadoop-full
 
 
 
@@ -242,179 +242,173 @@ hadoop.tmp.dir的配置要变更：/var/sxt/hadoop-2.6/ha
 	</property>
 
 
-分发 hdfs.xml 和core.xml　给其他节点
+* 分发 hdfs.xml 和core.xml　给其他节点
 
 
-安装zookeeper集群：
+# 安装zookeeper集群：
 ----------------------------
-1.3节点 java 安装 
+#### 1. 3节点 java 安装 
 
-2.所有集群节点创建目录: mkdir opt/sxt  
+#### 2.所有集群节点创建目录: mkdir opt/sxt  
 
-3.zk压缩包解压在其他路径下:：
+#### 3.zk压缩包解压在其他路径下:：
 	#	tar xf zookeeper-3.4.6.tar.gz -C /opt/sxt/
 
-4.进入conf目录，拷贝zoo_sample.cfg zoo.cfg 并配置
-   dataDir，集群节点。
+#### 4.进入conf目录，拷贝zoo_sample.cfg zoo.cfg 并配置dataDir，集群节点。
 
-5.单节点配置环境变量、并分发 ZOOKEEPER_PREFIX，共享模式读取profile 
+#### 5.单节点配置环境变量、并分发 ZOOKEEPER_PREFIX，共享模式读取profile 
 
-6. 共享创建 /var/sxt/zk目录，进入各自目录 分别输出1,2，3 至文件 myid
+#### 6. 共享创建 /var/sxt/zk目录，进入各自目录 分别输出1,2，3 至文件 myid
+>
 	echo 1 > /var/sxt/zk/myid
 	...
 
-7. 共享启动zkServer.sh start 集群
+#### 7. 共享启动zkServer.sh start 集群
 
 
-8.启动客户端 help命令查看
+#### 8.启动客户端 help命令查看
 
 
-6,7,8节点启动jn 集群
+### 6,7,8节点启动jn 集群
 -------------------------
-hadoop-daemon.sh start journalnode
+> 
+	hadoop-daemon.sh start journalnode
 
-随意找一个nn节点格式化：
-[root@node06 hadoop]# hdfs namenode -format
+>
+	随意找一个nn节点格式化：
+	[root@node06 hadoop]# hdfs namenode -format
 
-启动该节点：
-[root@node06 hadoop]# hadoop-daemon.sh start namenode
-
-另一nn节点同步：
-[root@node07 sxt]# hdfs namenode -bootstrapStandby
+>  
+	启动该节点：
+	[root@node06 hadoop]# hadoop-daemon.sh start namenode
+>	
+	另一nn节点同步：
+	[root@node07 sxt]# hdfs namenode -bootstrapStandby
 
 （同步成功，会发现同步另一个nn节点的clusterID 不是秘钥分发，而是同步过来的）
 
-cat /var/sxt/hadoop/ha/dfs/name/current/VERSION
+> cat /var/sxt/hadoop/ha/dfs/name/current/VERSION
 
 
-格式化zkfc，在zookeeper中可见目录创建：
+> 
+	格式化zkfc，在zookeeper中可见目录创建：
+	[root@node06 hadoop]# hdfs zkfc -formatZK
 
-[root@node06 hadoop]# hdfs zkfc -formatZK
+	（ha.ActiveStandbyElector: Successfully created /hadoop-ha/mycluster in ZK.）
 
-（ha.ActiveStandbyElector: Successfully created /hadoop-ha/mycluster in ZK.）
-
-在zookeeper 客户端可见：
-
-[zk: localhost:2181(CONNECTED) 1] ls /
-[hadoop-ha, zookeeper]
-[zk: localhost:2181(CONNECTED) 2] ls /hadoop-ha
-[mycluster]
-
-
-启动hdfs集群;
-
-start-dfs.sh
+#### 在zookeeper 客户端可见：
+>
+	[zk: localhost:2181(CONNECTED) 1] ls /
+	[hadoop-ha, zookeeper]
+	[zk: localhost:2181(CONNECTED) 2] ls /hadoop-ha
+	[mycluster]
 
 
-再次查看zk客户端，可见：
+#### 启动hdfs集群;
+
+> start-dfs.sh
+
+> 再次查看zk客户端，可见：
 [zk: localhost:2181(CONNECTED) 9] ls /hadoop-ha/mycluster
 [ActiveBreadCrumb, ActiveStandbyElectorLock]
 
-或者两个目录的数据，谁是主谁被创建：
+> 或者两个目录的数据，谁是主谁被创建：
 [zk: localhost:2181(CONNECTED) 11] get /hadoop-ha/mycluster/ActiveBreadCrumb
 
 
-mr-hd2.x yarn
+#### mr-hd2.x yarn
 ------------------------------------------------
 
-		NN1		NN2		DN		ZK		ZKFC		JNN		RS		NM
-NODE06		*								*		*				
-NODE07				*		*		*		*		*				*
-NODE08						*		*				*		*		*
-NODE09								*						*		*
+			NN1      NN2	      DN		ZK		ZKFC		JNN		RS		NM
+	NODE06		*								*		*				
+	NODE07		    	*		*		*		*		*				*
+	NODE08						*		*				*		*		*
+	NODE09								*						*		*
 
 
+> 
+	node06: 
+	两个rm节点互免秘钥：
+	08节点 .ssh 目录下： ssh-keygen -t dsa -P '' -f ./id_dsa
+				cat ~id_dsa.pub >> authorized_keys
 
-node06: 
+				scp id_dsa.pub root@node09:`pwd`/node08.pub
 
+	09节点 .ssh 目录下 ：
+			cat node08.pub >> authorized_keys
+			ssh-keygen -t dsa -P '' -f ./id_dsa
+			cat ~id_dsa.pub >> authorized_keys
+				scp id_dsa.pub root@node08:`pwd`/node09.pub
+			
+	08节点 .ssh 目录下：
+			cat node09.pub >> authorized_keys
+	（别忘了退出）
 
+* 重命名:  mv mapred-site.xml.template mapred-site.xml  
 
-两个rm节点互免秘钥：
-
-
-08节点 .ssh 目录下： ssh-keygen -t dsa -P '' -f ./id_dsa
-		    cat ~id_dsa.pub >> authorized_keys
-
-		    scp id_dsa.pub root@node09:`pwd`/node08.pub
-
-09节点 .ssh 目录下 ：
-		cat node08.pub >> authorized_keys
-		ssh-keygen -t dsa -P '' -f ./id_dsa
-		cat ~id_dsa.pub >> authorized_keys
-	        scp id_dsa.pub root@node08:`pwd`/node09.pub
-		
-08节点 .ssh 目录下：
-		cat node09.pub >> authorized_keys
-
-
-
-（别忘了退出）
-
-重命名:  mv mapred-site.xml.template mapred-site.xml  
-
-mapred-site.xml
+#### mapred-site.xml
 ==============================
-
-<property>
-        <name>mapreduce.framework.name</name>
-        <value>yarn</value>
-</property>
+>
+	<property>
+			<name>mapreduce.framework.name</name>
+			<value>yarn</value>
+	</property>
 
 
 =================================
-yarn-site.xml:
+#### yarn-site.xml:
 =================================
-
-<property>
-        <name>yarn.nodemanager.aux-services</name>
-        <value>mapreduce_shuffle</value>
-    </property>
-<property>
-   <name>yarn.resourcemanager.ha.enabled</name>
-   <value>true</value>
- </property>
- <property>
-   <name>yarn.resourcemanager.cluster-id</name>
-   <value>cluster1</value>
- </property>
- <property>
-   <name>yarn.resourcemanager.ha.rm-ids</name>
-   <value>rm1,rm2</value>
- </property>
- <property>
-   <name>yarn.resourcemanager.hostname.rm1</name>
-   <value>node08</value>
- </property>
- <property>
-   <name>yarn.resourcemanager.hostname.rm2</name>
-   <value>node09</value>
- </property>
- <property>
-   <name>yarn.resourcemanager.zk-address</name>
-   <value>node07:2181,node08:2181,node09:2181</value>
- </property>
-
-
-分发两个文件到：07，08,09节点
-scp maprexxxx   yarn-xxx node07:`pwd`
-scp maprexxxx   yarn-xxx node08:`pwd`
-scp maprexxxx   yarn-xxx node09:`pwd`
+> 
+	<property>
+			<name>yarn.nodemanager.aux-services</name>
+			<value>mapreduce_shuffle</value>
+		</property>
+	<property>
+	   <name>yarn.resourcemanager.ha.enabled</name>
+	   <value>true</value>
+	 </property>
+	 <property>
+	   <name>yarn.resourcemanager.cluster-id</name>
+	   <value>cluster1</value>
+	 </property>
+	 <property>
+	   <name>yarn.resourcemanager.ha.rm-ids</name>
+	   <value>rm1,rm2</value>
+	 </property>
+	 <property>
+	   <name>yarn.resourcemanager.hostname.rm1</name>
+	   <value>node08</value>
+	 </property>
+	 <property>
+	   <name>yarn.resourcemanager.hostname.rm2</name>
+	   <value>node09</value>
+	 </property>
+	 <property>
+	   <name>yarn.resourcemanager.zk-address</name>
+	   <value>node07:2181,node08:2181,node09:2181</value>
+	 </property>
 
 
-启动：node06:
+> 
+	* 分发两个文件到：07，08,09节点
+	scp maprexxxx   yarn-xxx node07:`pwd`
+	scp maprexxxx   yarn-xxx node08:`pwd`
+	scp maprexxxx   yarn-xxx node09:`pwd`
 
-1 zookeeper
-2 hdfs （注意，有一个脚本不要用，start-all）start-dfs.sh
-  如果nn 和 nn2没有启动，需要在node06，node07分别手动启动：
-  hadoop-daemon.sh start namenode	
-3 start-yarn.sh (启动nodemanager)
-4 在08,09节点分别执行脚本： yarn-daemon.sh start resourcemanager
+#### 最后，启动：node06:
+> 
+	1 zookeeper
+	2 hdfs （注意，有一个脚本不要用，start-all）start-dfs.sh
+	  如果nn 和 nn2没有启动，需要在node06，node07分别手动启动：
+	  hadoop-daemon.sh start namenode	
+	3 start-yarn.sh (启动nodemanager)
+	4 在08,09节点分别执行脚本： yarn-daemon.sh start resourcemanager
 
-UI访问： ip：8088
+	UI访问： ip：8088
 
 
-停止：
-node06: stop-dfs.sh 
-node06: stop-yarn.sh (停止nodemanager)
-node07,node08: yarn-daemon.sh stop resourcemanager （停止resourcemanager）
+	停止：
+	node06: stop-dfs.sh 
+	node06: stop-yarn.sh (停止nodemanager)
+	node07,node08: yarn-daemon.sh stop resourcemanager （停止resourcemanager）
 
