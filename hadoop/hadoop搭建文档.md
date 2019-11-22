@@ -1,27 +1,27 @@
-# Î±·Ö²¼Ê½ £¨single node setup£©
+# ä¼ªåˆ†å¸ƒå¼ ï¼ˆsingle node setupï¼‰
 ---------------------------
 
 
-## Ò»£¬ °²×°jdk¡¢ÅäÖÃ»·¾³±äÁ¿£¬²âÊÔ
+## ä¸€ï¼Œ å®‰è£…jdkã€é…ç½®ç¯å¢ƒå˜é‡ï¼Œæµ‹è¯•
 
-> ÏÈssh  localhost        /  node06      ĞŞ¸Ä/etc/hosts         ÖĞºóÃæµÚ¶şÁĞexitÍË³ö
+> å…ˆssh  localhost        /  node06      ä¿®æ”¹/etc/hosts         ä¸­åé¢ç¬¬äºŒåˆ—exité€€å‡º
 
->ÃâÃØÔ¿
+>å…ç§˜é’¥
 	ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
 	cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 
 
-> hadoop°ü°²×°²¢ÅäÖÃ»·±ä£ºhadoop-2.6.5.tar.gz
+> hadoopåŒ…å®‰è£…å¹¶é…ç½®ç¯å˜ï¼šhadoop-2.6.5.tar.gz
 export HADOOP_HOME=/opt/sxt/hadoop-2.6.5
 export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
-* HadoopµÄµÚ¶ş´ÎJAVA_HOME »·¾³±äÁ¿ÅäÖÃ
+* Hadoopçš„ç¬¬äºŒæ¬¡JAVA_HOME ç¯å¢ƒå˜é‡é…ç½®
 
-> vi hadoop-env.sh    ĞŞ¸ÄÎÄ¼şÖĞjavaµÄÅäÖÃ
+> vi hadoop-env.sh    ä¿®æ”¹æ–‡ä»¶ä¸­javaçš„é…ç½®
 > vi mapred-env.sh
 > vi yarn-env.sh
 
-* ÅäÖÃcore-site.xml
+* é…ç½®core-site.xml
  
 > vi core-site.xml
 
@@ -30,62 +30,62 @@ export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
         <value>hdfs://node06:9000</value>
     </property>
     <property>
-        <name>hadoop.tmp.dir</name>     // ÁÙÊ±ÎÄ¼ş¡¤ ´æ·ÅÎ»ÖÃ
+        <name>hadoop.tmp.dir</name>     // ä¸´æ—¶æ–‡ä»¶Â· å­˜æ”¾ä½ç½®
         <value>/var/sxt/hadoop/local</value>
     </property>
 
 
-* ÅäÖÃhdfs-site.xml
+* é…ç½®hdfs-site.xml
  > vi  hdfs-site.xml
  
     <property>
-        <name>dfs.replication</name>    // ¸±±¾ÊıÁ¿
+        <name>dfs.replication</name>    // å‰¯æœ¬æ•°é‡
         <value>1</value>
     </property>
     <property>
-        <name>dfs.namenode.secondary.http-address</name>   // µÚ¶ş½Úµã ¸¨ÖúnameNode
+        <name>dfs.namenode.secondary.http-address</name>   // ç¬¬äºŒèŠ‚ç‚¹ è¾…åŠ©nameNode
         <value>node06:50090</value>
     </property>
 	
-* ÅäÖÃslavesÎÄ¼ş
+* é…ç½®slavesæ–‡ä»¶
 > vi slaves node06
 			
-	¸ñÊ½»¯hdfs
-	hdfs namenode -format  (Ö»ÄÜ¸ñÊ½»¯Ò»´Î£¬ÔÙ´ÎÆô¶¯¼¯Èº²»ÒªÖ´ĞĞ£©
-	Æô¶¯¼¯Èº
+	æ ¼å¼åŒ–hdfs
+	hdfs namenode -format  (åªèƒ½æ ¼å¼åŒ–ä¸€æ¬¡ï¼Œå†æ¬¡å¯åŠ¨é›†ç¾¤ä¸è¦æ‰§è¡Œï¼‰
+	å¯åŠ¨é›†ç¾¤
 	start-dfs.sh
 
-	½ÇÉ«½ø³Ì²é¿´£ºjps
-	°ïÖú£º hdfs 
+	è§’è‰²è¿›ç¨‹æŸ¥çœ‹ï¼šjps
+	å¸®åŠ©ï¼š hdfs 
 		   hdfs dfs 	
 
-ss -nal £º²é¿´hadoop×´Ì¬½ø³Ì
-²é¿´web UI: IP:50070
+ss -nal ï¼šæŸ¥çœ‹hadoopçŠ¶æ€è¿›ç¨‹
+æŸ¥çœ‹web UI: IP:50070
 
-     ´´½¨Ä¿Â¼£ºhdfs dfs  -mkdir -p  /user/root 
+     åˆ›å»ºç›®å½•ï¼šhdfs dfs  -mkdir -p  /user/root 
 		
-     ²é¿´Ä¿Â¼:  hdfs dfs -ls   /
+     æŸ¥çœ‹ç›®å½•:  hdfs dfs -ls   /
 	
-     ÉÏ´«ÎÄ¼ş£º hdfs dfs -put  hadoop-2.6.5.tar.gz   /user/root    blockÒ»¸öÎª 128 > 128 ¾Í»áÔÚ/var/sxt/hadoopÏÂÏÂµÄdatanodeÖØĞÂ´´½¨Ò»¸öblock       ÎÒÃÇµÇÂ½ node06:50070 ¿ÉÒÔ²é¿´ ¾ßÌåÄÚÈİ		
+     ä¸Šä¼ æ–‡ä»¶ï¼š hdfs dfs -put  hadoop-2.6.5.tar.gz   /user/root    blockä¸€ä¸ªä¸º 128 > 128 å°±ä¼šåœ¨/var/sxt/hadoopä¸‹ä¸‹çš„datanodeé‡æ–°åˆ›å»ºä¸€ä¸ªblock       æˆ‘ä»¬ç™»é™† node06:50070 å¯ä»¥æŸ¥çœ‹ å…·ä½“å†…å®¹		
     
-      Í£Ö¹¼¯Èº£ºstop-dfs.sh
+      åœæ­¢é›†ç¾¤ï¼šstop-dfs.sh
 
 
 
-# È«·Ö²¼°²×°
+# å…¨åˆ†å¸ƒå®‰è£…
 ---------------------------------------------
-##  Áã £¬ Ç°ÆÚ×¼±¸£º
+##  é›¶ ï¼Œ å‰æœŸå‡†å¤‡ï¼š
 
 jdk
 hostname
 hosts
 date
-°²È«»úÖÆ
+å®‰å…¨æœºåˆ¶
 firewall
-windows ÓòÃûÓ³Éä
+windows åŸŸåæ˜ å°„
 
-½Úµã£º node06/07/08/09
-È«·Ö²¼·ÖÅä·½°¸£º
+èŠ‚ç‚¹ï¼š node06/07/08/09
+å…¨åˆ†å¸ƒåˆ†é…æ–¹æ¡ˆï¼š
 
 >					NN	SNN	DN
 >		NODE06		*
@@ -94,46 +94,46 @@ windows ÓòÃûÓ³Éä
 >		NODE09				*
 
 
-> ½Úµã×´Ì¬£º
-	node06£º Î±·Ö²¼
-	node07/08/09 :  ipÅäÖÃÍê³É
-½¨Á¢¸÷½ÚµãÍ¨Ñ¶£¨hosts£©
+> èŠ‚ç‚¹çŠ¶æ€ï¼š
+	node06ï¼š ä¼ªåˆ†å¸ƒ
+	node07/08/09 :  ipé…ç½®å®Œæˆ
+å»ºç«‹å„èŠ‚ç‚¹é€šè®¯ï¼ˆhostsï¼‰
 
 
-* £¬ ÉèÖÃÊ±¼äÍ¬²½£ºdate -s ¡°xxxx-x-xx xx:xx:xx¡±
+* ï¼Œ è®¾ç½®æ—¶é—´åŒæ­¥ï¼šdate -s â€œxxxx-x-xx xx:xx:xxâ€
 
 
-> ÃØÔ¿·Ö·¢£º 
-ÔÚÃ¿¸ö½ÚµãÉÏµÇÂ¼Ò»ÏÂ×Ô¼º£º²úÉú.sshÄ¿Â¼
-´Ónode06Ïònode07/node08/node09·Ö·¢¹«Ô¿ (¹«Ô¿µÄÃû³ÆÒª±ä»¯)
+> ç§˜é’¥åˆ†å‘ï¼š 
+åœ¨æ¯ä¸ªèŠ‚ç‚¹ä¸Šç™»å½•ä¸€ä¸‹è‡ªå·±ï¼šäº§ç”Ÿ.sshç›®å½•
+ä»node06å‘node07/node08/node09åˆ†å‘å…¬é’¥ (å…¬é’¥çš„åç§°è¦å˜åŒ–)
 scp  id_dsa.pub   node07:`pwd`/node06.pub
 
->¸÷½Úµã°Ñnode01µÄ¹«Ô¿×·¼Óµ½ÈÏÖ¤ÎÄ¼şÀï£º            ls -a²é¿´Òş²ØÎÄ¼ş
+>å„èŠ‚ç‚¹æŠŠnode01çš„å…¬é’¥è¿½åŠ åˆ°è®¤è¯æ–‡ä»¶é‡Œï¼š            ls -aæŸ¥çœ‹éšè—æ–‡ä»¶
 cat ~/node06.pub  >> ~/.ssh/authorized_keys
 
 
-> 07/node08/node09°²×°jdk»·¾³£¬node06·Ö·¢profile¸øÆäËû½Úµã£¬²¢ÖØ¶ÁÅäÖÃÎÄ¼ş
+> 07/node08/node09å®‰è£…jdkç¯å¢ƒï¼Œnode06åˆ†å‘profileç»™å…¶ä»–èŠ‚ç‚¹ï¼Œå¹¶é‡è¯»é…ç½®æ–‡ä»¶
 
-> scp ·Ö·¢hadoop²¿Êğ³ÌĞò2.6.5 µ½ÆäËû½Úµã
+> scp åˆ†å‘hadoopéƒ¨ç½²ç¨‹åº2.6.5 åˆ°å…¶ä»–èŠ‚ç‚¹
 
 
-* copy node06 ÏÂµÄ hadoop Îª hadoop-local £¨¹ÜÀí½Å±¾Ö»»á¶ÁÈ¡hadoopÄ¿Â¼£©
+* copy node06 ä¸‹çš„ hadoop ä¸º hadoop-local ï¼ˆç®¡ç†è„šæœ¬åªä¼šè¯»å–hadoopç›®å½•ï¼‰
 
 > [root@node06 etc]# cp -r hadoop   hadoop-local
-> ÅäÖÃcore-site.xml
-> ÅäÖÃhdfs-site.xml
-> ÅäÖÃslaves
+> é…ç½®core-site.xml
+> é…ç½®hdfs-site.xml
+> é…ç½®slaves
 > node07
 > node08
 > node09
 
 > root@node06 opt]# scp -r sxt/ node07:`pwd`
-·Ö·¢sxtµ½ÆäËû07,08£¬09½Úµã
+åˆ†å‘sxtåˆ°å…¶ä»–07,08ï¼Œ09èŠ‚ç‚¹
 
-¸ñÊ½»¯¼¯Èº£ºhdfs namenode -format
+æ ¼å¼åŒ–é›†ç¾¤ï¼šhdfs namenode -format
 
-Æô¶¯¼¯Èº£ºstart-dfs.sh
-Jps  ²é¿´¸÷½Úµã½ø³ÌÆô¶¯Çé¿ö
+å¯åŠ¨é›†ç¾¤ï¼šstart-dfs.sh
+Jps  æŸ¥çœ‹å„èŠ‚ç‚¹è¿›ç¨‹å¯åŠ¨æƒ…å†µ
 
 
 ## HA 
@@ -146,21 +146,21 @@ Jps  ²é¿´¸÷½Úµã½ø³ÌÆô¶¯Çé¿ö
 	NODE09					*		*
 
 
-* Á½¸önn½ÚµãÃâÃØÔ¿
+* ä¸¤ä¸ªnnèŠ‚ç‚¹å…ç§˜é’¥
 ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
 cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 
 -------------------------
 >
-	½øÈëhadoop-2.6.5/etcÄ¿Â¼ (¿ÉÒÔÍ¨¹ı±äÁ¿£ºcd $HADOOP_HOME)
-	¿½±´hadoop Îª hadoop-full
+	è¿›å…¥hadoop-2.6.5/etcç›®å½• (å¯ä»¥é€šè¿‡å˜é‡ï¼šcd $HADOOP_HOME)
+	æ‹·è´hadoop ä¸º hadoop-full
 
 
 
 hdfs.xml
 ---------------------------------------
 
-* È¥µôsnnµÄÅäÖÃ
+* å»æ‰snnçš„é…ç½®
 >
 
 	 <property>
@@ -169,7 +169,7 @@ hdfs.xml
 	 </property>
 
 
-* Ôö¼Ó£º
+* å¢åŠ ï¼š
 >
 
 	<property>
@@ -229,7 +229,7 @@ hdfs.xml
 * core-site.xml
 -----------------------------------------
 
-hadoop.tmp.dirµÄÅäÖÃÒª±ä¸ü£º/var/sxt/hadoop-2.6/ha
+hadoop.tmp.dirçš„é…ç½®è¦å˜æ›´ï¼š/var/sxt/hadoop-2.6/ha
 > 
 	<property>
 	  <name>fs.defaultFS</name>
@@ -242,61 +242,61 @@ hadoop.tmp.dirµÄÅäÖÃÒª±ä¸ü£º/var/sxt/hadoop-2.6/ha
 	</property>
 
 
-* ·Ö·¢ hdfs.xml ºÍcore.xml¡¡¸øÆäËû½Úµã
+* åˆ†å‘ hdfs.xml å’Œcore.xmlã€€ç»™å…¶ä»–èŠ‚ç‚¹
 
 
-# °²×°zookeeper¼¯Èº£º
+# å®‰è£…zookeeperé›†ç¾¤ï¼š
 ----------------------------
-#### 1. 3½Úµã java °²×° 
+#### 1. 3èŠ‚ç‚¹ java å®‰è£… 
 
-#### 2.ËùÓĞ¼¯Èº½Úµã´´½¨Ä¿Â¼: mkdir opt/sxt  
+#### 2.æ‰€æœ‰é›†ç¾¤èŠ‚ç‚¹åˆ›å»ºç›®å½•: mkdir opt/sxt  
 
-#### 3.zkÑ¹Ëõ°ü½âÑ¹ÔÚÆäËûÂ·¾¶ÏÂ:£º
+#### 3.zkå‹ç¼©åŒ…è§£å‹åœ¨å…¶ä»–è·¯å¾„ä¸‹:ï¼š
 	#	tar xf zookeeper-3.4.6.tar.gz -C /opt/sxt/
 
-#### 4.½øÈëconfÄ¿Â¼£¬¿½±´zoo_sample.cfg zoo.cfg ²¢ÅäÖÃdataDir£¬¼¯Èº½Úµã¡£
+#### 4.è¿›å…¥confç›®å½•ï¼Œæ‹·è´zoo_sample.cfg zoo.cfg å¹¶é…ç½®dataDirï¼Œé›†ç¾¤èŠ‚ç‚¹ã€‚
 
-#### 5.µ¥½ÚµãÅäÖÃ»·¾³±äÁ¿¡¢²¢·Ö·¢ ZOOKEEPER_PREFIX£¬¹²ÏíÄ£Ê½¶ÁÈ¡profile 
+#### 5.å•èŠ‚ç‚¹é…ç½®ç¯å¢ƒå˜é‡ã€å¹¶åˆ†å‘ ZOOKEEPER_PREFIXï¼Œå…±äº«æ¨¡å¼è¯»å–profile 
 
-#### 6. ¹²Ïí´´½¨ /var/sxt/zkÄ¿Â¼£¬½øÈë¸÷×ÔÄ¿Â¼ ·Ö±ğÊä³ö1,2£¬3 ÖÁÎÄ¼ş myid
+#### 6. å…±äº«åˆ›å»º /var/sxt/zkç›®å½•ï¼Œè¿›å…¥å„è‡ªç›®å½• åˆ†åˆ«è¾“å‡º1,2ï¼Œ3 è‡³æ–‡ä»¶ myid
 >
 	echo 1 > /var/sxt/zk/myid
 	...
 
-#### 7. ¹²ÏíÆô¶¯zkServer.sh start ¼¯Èº
+#### 7. å…±äº«å¯åŠ¨zkServer.sh start é›†ç¾¤
 
 
-#### 8.Æô¶¯¿Í»§¶Ë helpÃüÁî²é¿´
+#### 8.å¯åŠ¨å®¢æˆ·ç«¯ helpå‘½ä»¤æŸ¥çœ‹
 
 
-### 6,7,8½ÚµãÆô¶¯jn ¼¯Èº
+### 6,7,8èŠ‚ç‚¹å¯åŠ¨jn é›†ç¾¤
 -------------------------
 > 
 	hadoop-daemon.sh start journalnode
 
 >
-	ËæÒâÕÒÒ»¸önn½Úµã¸ñÊ½»¯£º
+	éšæ„æ‰¾ä¸€ä¸ªnnèŠ‚ç‚¹æ ¼å¼åŒ–ï¼š
 	[root@node06 hadoop]# hdfs namenode -format
 
 >  
-	Æô¶¯¸Ã½Úµã£º
+	å¯åŠ¨è¯¥èŠ‚ç‚¹ï¼š
 	[root@node06 hadoop]# hadoop-daemon.sh start namenode
 >	
-	ÁíÒ»nn½ÚµãÍ¬²½£º
+	å¦ä¸€nnèŠ‚ç‚¹åŒæ­¥ï¼š
 	[root@node07 sxt]# hdfs namenode -bootstrapStandby
 
-£¨Í¬²½³É¹¦£¬»á·¢ÏÖÍ¬²½ÁíÒ»¸önn½ÚµãµÄclusterID ²»ÊÇÃØÔ¿·Ö·¢£¬¶øÊÇÍ¬²½¹ıÀ´µÄ£©
+ï¼ˆåŒæ­¥æˆåŠŸï¼Œä¼šå‘ç°åŒæ­¥å¦ä¸€ä¸ªnnèŠ‚ç‚¹çš„clusterID ä¸æ˜¯ç§˜é’¥åˆ†å‘ï¼Œè€Œæ˜¯åŒæ­¥è¿‡æ¥çš„ï¼‰
 
 > cat /var/sxt/hadoop/ha/dfs/name/current/VERSION
 
 
 > 
-	¸ñÊ½»¯zkfc£¬ÔÚzookeeperÖĞ¿É¼ûÄ¿Â¼´´½¨£º
+	æ ¼å¼åŒ–zkfcï¼Œåœ¨zookeeperä¸­å¯è§ç›®å½•åˆ›å»ºï¼š
 	[root@node06 hadoop]# hdfs zkfc -formatZK
 
-	£¨ha.ActiveStandbyElector: Successfully created /hadoop-ha/mycluster in ZK.£©
+	ï¼ˆha.ActiveStandbyElector: Successfully created /hadoop-ha/mycluster in ZK.ï¼‰
 
-#### ÔÚzookeeper ¿Í»§¶Ë¿É¼û£º
+#### åœ¨zookeeper å®¢æˆ·ç«¯å¯è§ï¼š
 >
 	[zk: localhost:2181(CONNECTED) 1] ls /
 	[hadoop-ha, zookeeper]
@@ -304,15 +304,15 @@ hadoop.tmp.dirµÄÅäÖÃÒª±ä¸ü£º/var/sxt/hadoop-2.6/ha
 	[mycluster]
 
 
-#### Æô¶¯hdfs¼¯Èº;
+#### å¯åŠ¨hdfsé›†ç¾¤;
 
 > start-dfs.sh
 
-> ÔÙ´Î²é¿´zk¿Í»§¶Ë£¬¿É¼û£º
+> å†æ¬¡æŸ¥çœ‹zkå®¢æˆ·ç«¯ï¼Œå¯è§ï¼š
 [zk: localhost:2181(CONNECTED) 9] ls /hadoop-ha/mycluster
 [ActiveBreadCrumb, ActiveStandbyElectorLock]
 
-> »òÕßÁ½¸öÄ¿Â¼µÄÊı¾İ£¬Ë­ÊÇÖ÷Ë­±»´´½¨£º
+> æˆ–è€…ä¸¤ä¸ªç›®å½•çš„æ•°æ®ï¼Œè°æ˜¯ä¸»è°è¢«åˆ›å»ºï¼š
 [zk: localhost:2181(CONNECTED) 11] get /hadoop-ha/mycluster/ActiveBreadCrumb
 
 
@@ -328,23 +328,23 @@ hadoop.tmp.dirµÄÅäÖÃÒª±ä¸ü£º/var/sxt/hadoop-2.6/ha
 
 > 
 	node06: 
-	Á½¸örm½Úµã»¥ÃâÃØÔ¿£º
-	08½Úµã .ssh Ä¿Â¼ÏÂ£º ssh-keygen -t dsa -P '' -f ./id_dsa
+	ä¸¤ä¸ªrmèŠ‚ç‚¹äº’å…ç§˜é’¥ï¼š
+	08èŠ‚ç‚¹ .ssh ç›®å½•ä¸‹ï¼š ssh-keygen -t dsa -P '' -f ./id_dsa
 				cat ~id_dsa.pub >> authorized_keys
 
 				scp id_dsa.pub root@node09:`pwd`/node08.pub
 
-	09½Úµã .ssh Ä¿Â¼ÏÂ £º
+	09èŠ‚ç‚¹ .ssh ç›®å½•ä¸‹ ï¼š
 			cat node08.pub >> authorized_keys
 			ssh-keygen -t dsa -P '' -f ./id_dsa
 			cat ~id_dsa.pub >> authorized_keys
 				scp id_dsa.pub root@node08:`pwd`/node09.pub
 			
-	08½Úµã .ssh Ä¿Â¼ÏÂ£º
+	08èŠ‚ç‚¹ .ssh ç›®å½•ä¸‹ï¼š
 			cat node09.pub >> authorized_keys
-	£¨±ğÍüÁËÍË³ö£©
+	ï¼ˆåˆ«å¿˜äº†é€€å‡ºï¼‰
 
-* ÖØÃüÃû:  mv mapred-site.xml.template mapred-site.xml  
+* é‡å‘½å:  mv mapred-site.xml.template mapred-site.xml  
 
 #### mapred-site.xml
 ==============================
@@ -390,25 +390,25 @@ hadoop.tmp.dirµÄÅäÖÃÒª±ä¸ü£º/var/sxt/hadoop-2.6/ha
 
 
 > 
-	* ·Ö·¢Á½¸öÎÄ¼şµ½£º07£¬08,09½Úµã
+	* åˆ†å‘ä¸¤ä¸ªæ–‡ä»¶åˆ°ï¼š07ï¼Œ08,09èŠ‚ç‚¹
 	scp maprexxxx   yarn-xxx node07:`pwd`
 	scp maprexxxx   yarn-xxx node08:`pwd`
 	scp maprexxxx   yarn-xxx node09:`pwd`
 
-#### ×îºó£¬Æô¶¯£ºnode06:
+#### æœ€åï¼Œå¯åŠ¨ï¼šnode06:
 > 
 	1 zookeeper
-	2 hdfs £¨×¢Òâ£¬ÓĞÒ»¸ö½Å±¾²»ÒªÓÃ£¬start-all£©start-dfs.sh
-	  Èç¹ûnn ºÍ nn2Ã»ÓĞÆô¶¯£¬ĞèÒªÔÚnode06£¬node07·Ö±ğÊÖ¶¯Æô¶¯£º
+	2 hdfs ï¼ˆæ³¨æ„ï¼Œæœ‰ä¸€ä¸ªè„šæœ¬ä¸è¦ç”¨ï¼Œstart-allï¼‰start-dfs.sh
+	  å¦‚æœnn å’Œ nn2æ²¡æœ‰å¯åŠ¨ï¼Œéœ€è¦åœ¨node06ï¼Œnode07åˆ†åˆ«æ‰‹åŠ¨å¯åŠ¨ï¼š
 	  hadoop-daemon.sh start namenode	
-	3 start-yarn.sh (Æô¶¯nodemanager)
-	4 ÔÚ08,09½Úµã·Ö±ğÖ´ĞĞ½Å±¾£º yarn-daemon.sh start resourcemanager
+	3 start-yarn.sh (å¯åŠ¨nodemanager)
+	4 åœ¨08,09èŠ‚ç‚¹åˆ†åˆ«æ‰§è¡Œè„šæœ¬ï¼š yarn-daemon.sh start resourcemanager
 
-	UI·ÃÎÊ£º ip£º8088
+	UIè®¿é—®ï¼š ipï¼š8088
 
 
-	Í£Ö¹£º
+	åœæ­¢ï¼š
 	node06: stop-dfs.sh 
-	node06: stop-yarn.sh (Í£Ö¹nodemanager)
-	node07,node08: yarn-daemon.sh stop resourcemanager £¨Í£Ö¹resourcemanager£©
+	node06: stop-yarn.sh (åœæ­¢nodemanager)
+	node07,node08: yarn-daemon.sh stop resourcemanager ï¼ˆåœæ­¢resourcemanagerï¼‰
 
