@@ -46,7 +46,7 @@ chunk是最小的单位，它是client向DataNode，或DataNode的PipLine之间�
 4. client请求3台的DataNode的一台A上传数据,(本质是一个RPC调用,建立pipeline),A收到请求会继续调用B,然后B调用C,将整个pipeline建立完成后,逐  
 级返回client;  
 5. client开始往A上传第一个block(先从磁盘读取数据放到一个本地内存缓存),以packet为单位(默认 64K),A收到一个packet就会传给B,B传递给C;A每传一  
-个packet会放入一个应答队列等待应答.  
+个packet会放入一个应答队列等待应答.   这个wait queue在client等待。
 >	
 	注: 如果某个datanode在写数据的时候宕掉了下面这些对用户透明的步骤会被执行:  
 	1) 管道线关闭,所有确认队列上的数据会被挪到数据队列的首部重新发送,这样也就确保管道线中宕掉的datanode下流的datanode不会因为宕掉的datanode而丢  
