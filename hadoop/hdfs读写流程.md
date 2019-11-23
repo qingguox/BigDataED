@@ -58,7 +58,7 @@ chunk是最小的单位，它是client向DataNode，或DataNode的PipLine之间�
 	4) 有可能管道线中的多个datanode宕掉(一般这种情况很少),但只要dfs.relication.min(默认值为1)个replica被创建,我么就认为该创建成功了,剩余的re  
 	lica会在以后异步创建以达到指定的replica数.  
 6. 数据被分割成一个个packet数据包在pipeline上一次传输,在pipeline反方向上,逐个发送ack(命令正确应答),最终由pipeline中第一个DataNode节点A  
-	将pipeline ack发送给client  
+	将pipeline ack发送给client  ,这些 ack 放在ack queue中
 7. 当一个block传输完成后,client再次发送请求NameNode上传第二个block到服务器  
 7. 发送完成信号给NameNode。
 > （注：发送完成信号的时机取决于集群是强一致性还是最终一致性，强一致性则需要所有DataNode写完后才向NameNode汇报。最终一致性则其中任意一个DataNode写完后就能单独向NameNode汇报，HDFS一般情况下都是强调强一致性）
@@ -71,10 +71,19 @@ chunk是最小的单位，它是client向DataNode，或DataNode的PipLine之间�
 读相对于写，简单一些
 读详细步骤：
 
-1. client访问NameNode，查询元数据信息，获得这个文件的数据块位置列表，返回输入流对象。
-2. 就近挑选一台datanode服务器，请求建立输入流 。
-3. DataNode向输入流中中写数据，以packet为单位来校验。
-4. 关闭输入流
+1. 跟namenode通信查询元数据，找到文件块所在的datanode服务器，HDFS客户端首先调用DistributedFileSystem.open方法打开HDFS文件，底层会调用ClientProtocal.open方法，返回一个用于读取的HdfsDataInputStream对象。
+
+2. 从NameNode获取DataNode地址：在构造DFSInputStream的时候，对调用ClientPortocal.getBlockLocations方法向NameNode获取该文件起始位置数据块信息。NameNode返回的数据块的存储位置是按照与客户端距离远近排序的。所以DFSInputStream可以选择一个最优的DataNode节点,然后与这个节点建立数据连接读取数据块。
+
+3. 连接到DataNode读取数据块：
+HDFS客户端通过调用DFSInputSttream从最优的DataNode读取数据块，数据会以数据包packet形式从DataNode以流式接口传送到客户端，当达到一个数据块末尾的时候,DFSInputStream就会再次调用ClientProtocal.getBlockL
+octions获取下一个数据块的位置信息，并建立和这个新的数据块的最优节点之间的连接，然后HDFS继续读取数据块。
+
+>
+	(客户端读取数据块的时候，很有可能这个数据块的DataNode出现异常，也就是无法读取数据。这时候DFSInputStream会切换到另一个保存了这个数据块副本的DataNode，然后读取数据。另外，数据块的应答不仅包含了数据块还包含了校验值，HDFS客户端收到数据应答包的时候，会对数据进行校验，如果校验错误，也就是DataNode这个数据块副本出现了损坏，HDFS
+	客户端会通过ClientProtocal.reportBadBlocks向NameNode汇报这个损坏的数据块副本，同时DFSInputStream会尝试从其他DataNode读取这个数据块)
+
+4.客户端关闭输入流
 
 ### 读写过程，数据完整性如何保持？
 通过校验和。因为每个chunk中都有一个校验位，一个个chunk构成packet，一个个packet最终形成block，故可在block上求校验和。
