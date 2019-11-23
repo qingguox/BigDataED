@@ -36,7 +36,7 @@ chunk是最小的单位，它是client向DataNode，或DataNode的PipLine之间�
 写详细步骤：
 1. client发起文件上传请求,通过RPC与NameNode建立连接,NameNode检查目标文件是否已经存在,父目录是否存在,并检查用户是否有相应的权限,若检查通过,  
 会为该文件创建一个新的记录,否则的话文件创建失败,客户端得到异常信息,  
-2. client通过请求NameNode,第一个block应该传输到哪些DataNode服务器上;  
+2. client开始分块 ，通过请求NameNode,第一个block应该传输到哪些DataNode服务器上;  
 3. NameNode根据配置文件中指定的备份(replica)数量及机架感知原理进行文件分配,返回可用的DataNode的地址 以三台DataNode为例:A B C  
 > 注: Hadoop在设计时考虑到数据的安全与高效,数据文件默认在HDFS上存放三份,存储策略为:第一个备份放在客户端相同的datanode上(若客户端在集群外运行,  
 	就随机选取一个datanode来存放第一个replica),第二个replica放在与第一个replica不同机架的一个随机datanode上,第三个replica放在与第二个repli  
