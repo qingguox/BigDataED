@@ -34,18 +34,34 @@ chunk是最小的单位，它是client向DataNode，或DataNode的PipLine之间�
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/hadoop/photo/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.jpg)
 
 写详细步骤：
-1. 客户端向NameNode发出写文件请求。
-2. 检查是否已存在文件、检查权限。若通过检查，直接先将操作写入EditLog，并返回输出流对象。
-（注：WAL，write ahead log，先写Log，再写内存，因为EditLog记录的是最新的HDFS客户端执行所有的写操作。如果后续真实写操作失败了，由于在真实写操作之前，操作就被写入EditLog中了，故EditLog中仍会有记录，我们不用担心后续client读不到相应的数据块，因为在第5步中DataNode收到块后会有一返回确认信息，若没写成功，发送端没收到确认信息，会一直重试，直到成功）
-3. client端按
-		##### 128MB的块切分文件。
-4. client将NameNode返回的分配的可写的DataNode列表和Data数据一同发送给最近的第一个DataNode节点，此后client端和NameNode分配的多个DataNode构成pipeline管道，client端向输出流对象中写数据。client每向第一个DataNode写入一个packet，这个packet便会直接在pipeline里传给第二个、第三个…DataNode。
-（注：并不是写好一个块或一整个文件后才向后分发）
-5. 每个DataNode写完一个块后，会返回确认信息。
-（注：并不是每写完一个packet后就返回确认信息，个人觉得因为packet中的每个chunk都携带校验信息，没必要每写一个就汇报一下，这样效率太慢。正确的做法是写完一个block块后，对校验信息进行汇总分析，就能得出是否有块写错的情况发生）
-6. 写完数据，关闭输输出流。
+1. client发起文件上传请求,通过RPC与NameNode建立连接,NameNode检查目标文件是否已经存在,父目录是否存在,并检查用户是否有相应的权限,若检查通过,  
+会为该文件创建一个新的记录,否则的话文件创建失败,客户端得到异常信息,  
+2. client通过请求NameNode,第一个block应该传输到哪些DataNode服务器上;  
+3. NameNode根据配置文件中指定的备份(replica)数量及机架感知原理进行文件分配,返回可用的DataNode的地址 以三台DataNode为例:A B C  
+> 注: Hadoop在设计时考虑到数据的安全与高效,数据文件默认在HDFS上存放三份,存储策略为:第一个备份放在客户端相同的datanode上(若客户端在集群外运行,  
+	就随机选取一个datanode来存放第一个replica),第二个replica放在与第一个replica不同机架的一个随机datanode上,第三个replica放在与第二个repli  
+	ca相同机架的随机datanode上,如果replica数大于三,则随后的replica在集群中随机存放,Hadoop会尽量避免过多的replica存放在同一个机架上.选取repl  
+	ica存放在同一个机架上.(Hadoop 1.x以后允许replica是可插拔的,意思是说可以定制自己需要的replica分配策略)  
+
+4. client请求3台的DataNode的一台A上传数据,(本质是一个RPC调用,建立pipeline),A收到请求会继续调用B,然后B调用C,将整个pipeline建立完成后,逐  
+级返回client;  
+5. client开始往A上传第一个block(先从磁盘读取数据放到一个本地内存缓存),以packet为单位(默认 64K),A收到一个packet就会传给B,B传递给C;A每传一  
+个packet会放入一个应答队列等待应答.  
+>	
+	注: 如果某个datanode在写数据的时候宕掉了下面这些对用户透明的步骤会被执行:  
+	1) 管道线关闭,所有确认队列上的数据会被挪到数据队列的首部重新发送,这样也就确保管道线中宕掉的datanode下流的datanode不会因为宕掉的datanode而丢  
+	失数据包  
+	2) 在还在正常运行datanode上的当前block上做一个标志,这样当宕掉的datanode重新启动以后namenode就会知道该datanode上哪个block是刚才宕机残留下  
+	的局部损坏block,从而把他删除掉  
+	3) 已经宕掉的datanode从管道线中被移除,未写完的block的其他数据继续呗写入到其他两个还在正常运行的datanode中,namenode知道这个block还处在und  
+	er-replicated状态(即备份数不足的状态)下,然后它会安排一个新的replica从而达到要求的备份数,后续的block写入方法同前面正常时候一样  
+	4) 有可能管道线中的多个datanode宕掉(一般这种情况很少),但只要dfs.relication.min(默认值为1)个replica被创建,我么就认为该创建成功了,剩余的re  
+	lica会在以后异步创建以达到指定的replica数.  
+6. 数据被分割成一个个packet数据包在pipeline上一次传输,在pipeline反方向上,逐个发送ack(命令正确应答),最终由pipeline中第一个DataNode节点A  
+	将pipeline ack发送给client  
+7. 当一个block传输完成后,client再次发送请求NameNode上传第二个block到服务器  
 7. 发送完成信号给NameNode。
-（注：发送完成信号的时机取决于集群是强一致性还是最终一致性，强一致性则需要所有DataNode写完后才向NameNode汇报。最终一致性则其中任意一个DataNode写完后就能单独向NameNode汇报，HDFS一般情况下都是强调强一致性）
+> （注：发送完成信号的时机取决于集群是强一致性还是最终一致性，强一致性则需要所有DataNode写完后才向NameNode汇报。最终一致性则其中任意一个DataNode写完后就能单独向NameNode汇报，HDFS一般情况下都是强调强一致性）
 
 
 ### HDFS读流程
