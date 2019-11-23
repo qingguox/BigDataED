@@ -66,8 +66,3 @@ ApplicationManager： 接收新application、监控application执行状态、重
 与MapReduce 1.x 中的slot 类似，container是YARN中的资源抽象，对节点的资源，如cpu、内存、磁盘等进行封装；
 YARN为每一个任务分配一个container去进行执行；
 container与slot的区别在于，container是可以进行资源的动态划分的，而slot不能改变自身所包含资源的多少。
-
-作者：alexlee666
-链接：https://www.jianshu.com/p/c2cd0ddf770b
-来源：简书
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
