@@ -50,6 +50,8 @@ chunk是最小的单位，它是client向DataNode，或DataNode的PipLine之间�
 
 ### HDFS读流程
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/hadoop/photo/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B.jpg)
+
 读相对于写，简单一些
 读详细步骤：
 
