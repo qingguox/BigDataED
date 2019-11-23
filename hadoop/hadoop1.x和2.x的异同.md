@@ -31,9 +31,7 @@ Master：全局唯一的 JobTracker：
 	
 ## 三、hadoop 2.X 版本之后的MapReduce和YARN
 
-![Image text](https://github.com/1367379258/BigDataEd/blob/master/hadoop/photo/Hadoop_MRV2.jpg)
-
-
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/hadoop/photo/hadoop2.x%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg)
 
 
 #### 3.1 引入资源管理器YARN
