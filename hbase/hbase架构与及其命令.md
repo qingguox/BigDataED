@@ -24,6 +24,8 @@
 
 ## 数据模型
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/hbase/photo/Hbase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B.jpg)
+
 ### rowkey
 
 - 相当于MySQL中的主键，唯一标识一行记录
