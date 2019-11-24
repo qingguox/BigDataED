@@ -62,7 +62,7 @@
 ## 架构
 
 ### hbase是主从架构
-![Image text](https://github.com/1367379258/BigDataEd/blob/master/hadoop/photo/HDFS%E5%86%99%E6%B5%81%E7%A8%8B.jpg)
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/hbase/photo/hbase%E6%9E%B6%E6%9E%84.jpg)
 
 ### 角色
 
