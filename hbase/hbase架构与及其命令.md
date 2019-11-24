@@ -137,13 +137,14 @@
 	- 2、从zk中拿到metadata的存储节点
 	- 3、去存储matadata的节点获取对应region所在的位置
 	- 4、访问对应的region写数据
-	- 5、首先会向wal（HLog 预写日志）中写数据，写成功之后才会存储到memstore
+	- 5、首先会向wal（HLog 预写日志）中写记录，写成功之后才会存储到memstore
 		(万一写入 出错，就会根据hlog中日志回滚数据。)
 	- 6、当memstore中的数据量达到阈值之后，进行溢写，溢写成storefile
 	- 7、store file是一个个的小文件，会进行合并（minor,major）
 	- 8、store file是对hfile的封装，hfile是实际存储再hdfs上的数据文件
 	
 	MemStore称为写缓存 ，blockcache是读缓存（存储在regionserver 只有一份）
+	HLog 被一个server下所有region所共享 
 ### WAL
 
 - write ahead log
