@@ -75,7 +75,7 @@
 	- 保证任何时刻集群中有且仅有一台avtive的master
 	- 存储所有region的寻址入口
 
-		- 所有region元数据存储在哪一台regionserver
+	- 所有region元数据存储在哪一台regionserver
 
 	- 监控regionserver的上线和下线信息，并实时通知master
 	- 存储相关的表的schema数据
