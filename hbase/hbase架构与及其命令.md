@@ -156,18 +156,22 @@
 ### HBaseAdmin
 
 - 管理表
-	list  : 列表 
+	list  : 列表 table列表
 	- createtable
 	- disabletable
 	- deletetable
-
+	- truncate tanle1
 ### HTable
 
 - 管理数据
 
 	- put
+		put 'tbl','11','cf:age','20'
 	- get
+		get 'tbl','11','cf:name'
 	- scan
+		scan 'tbl'
 	- delete
+		delete 'tbl','11','cf:name'
 
 *XMind: ZEN - Trial Version*
