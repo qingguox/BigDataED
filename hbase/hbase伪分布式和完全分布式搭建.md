@@ -77,3 +77,5 @@
 	Path   ... :$HBASE_HOME/bin
 ####  3、start-hbase.sh 在·node06上
 	启动其中某一个  hbase-daemon.sh start master  node09上 待机
+
+	node06:60010
