@@ -142,10 +142,10 @@
 	- 6、当memstore中的数据量达到阈值之后，进行溢写，溢写成storefile
 	- 7、store file是一个个的小文件，会进行合并（minor,major）
 	- 8、store file是对hfile的封装，hfile是实际存储再hdfs上的数据文件
-	
+	- 9.当Storefile大小超过一定阈值后，会把当前的Region分割为两个（Split），并由Hmaster分配到相应的HRegionServer，实现负载均衡
 	MemStore称为写缓存 ，blockcache是读缓存（存储在regionserver 只有一份）
 	HLog 被一个server下所有region所共享 
-### WAL
+### WAL   hlog
 
 - write ahead log
 - 放置数据丢失
