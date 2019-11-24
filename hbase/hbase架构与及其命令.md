@@ -156,7 +156,7 @@
 ### HBaseAdmin
 
 - 管理表
-
+	list  : 列表 
 	- createtable
 	- disabletable
 	- deletetable
