@@ -157,21 +157,30 @@
 
 - 管理表
 	list  : 列表 table列表
-	- createtable
-	- disabletable
-	- deletetable
+	- create 'tb1','cf' 表名 + 列族默认在default空间内  也可以指定空间   'np1:tb1'
 	- truncate tanle1
+	- disable 'tb1' : 先禁用表  然后删除 delete 'tb1'
+	- desc '表名'
+	
+	- list_namespace_tables 'hbase' ：查看hbase空间的表 
+	- scan 'hbase:meta'  :查看 hbase中meta表的数据
+	
+	
 ### HTable
 
 - 管理数据
 
-	- put
-		put 'tbl','11','cf:age','20'
 	- get
 		get 'tbl','11','cf:name'
 	- scan
 		scan 'tbl'
 	- delete
 		delete 'tbl','11','cf:name'
+	
+	- put
+		put 'tbl','11','cf:age','20'
+	>	
+	 先 flush tb1  因为数据在 memstore中 还未写入磁盘
+	  在 /home/test/.......下查看 hbase hfile -p -m -f filname	
 
 *XMind: ZEN - Trial Version*
