@@ -130,6 +130,7 @@
 	create table ps7 like ps5;  // 只复制表的结构
 
 
+
 ######	2.5.2 重命名表
 	alter table old_table rename to new_table;
 
@@ -149,15 +150,63 @@
 ######	2.5.4修改表的属性
 	alter table log_message set tblproperties('notes'='sfa adf a a')
 
-		
+###### 2.6	
 	
+	FROM psn        
+	INSERT OVERWRITE TABLE psn10              // 和insert into psn10作用一样
+	SELECT id,name
+	insert into psn11
+	select id,likes
+
+	把表的数据 导入到外部文件  用
+	insert overwrite local directory '/root/result'   // 慎重  overwrite是覆盖 
+	selet * from psn;
+
+	where  kk > 0.2  为了避免错误 
+                 >  cast (0.2 as float )  :先转为 float
 	
+
+	因为 delete 和 update用不了 因为hive不支持事务  但是实际上 人家是支持事务的  用一下的东西
+	truncate table psn;          // 删除表
+
+	select kk ll from tnale 
+	distribute by kk      // 相同kk 发送到一个 reducer
+	sort by ll asc;	// 进行排序· 
+
+	比 group by 好用
+	两个 查询语句  用 union all 拼接
+
 	
+#### 3. 	beeline  和 hiveserver2 有关
+	hiveserver2 是和 hive --service metastore  一样 都是使用同一套 元数据服务 
+
+	 一般 我们在 两个节点·开启   一个hiveserver2   一个hive --service metastore   08下  （开发人员）
+	 hiveserver2   两种链接方式 ：（非开发人员）
+		1. beeline 链接   （命令行 ）
+			Beeline 要与HiveServer2配合使用
+			服务端启动hiveserver2  node09 下      
+			客户的通过beeline两种方式连接到hive
+			1、beeline -u jdbc:hive2://node09:10000/default -n root
+			2、beeline
+			beeline> !connect jdbc:hive2://<host>:<port>/<db>;auth=noSasl root 123
+				!connect jdbc:hive2://node09:10000/default  root 123
+			默认 用户名、密码不验证
+		2. JDBC 接口链接   就是java客户端链接  
+
+#### 4.  自定义 函数 (两种饭是钢后)
+
+>
+  	1. 外部 eclipse 开发的jar  把hivedemo达成jar  然后 上传到 node09   /root/data下 
+	 hive 下 运行  add jar /root/data/tuomain.jar;
+	// 创建 会话下的函数   quit 之后 就没用了 没有了 自定义函数
+ 	create temporary function tm as 'cn.laolian.TuoMin'
+	select tm(name) from psn;
 	
-	
-	
-	
-	
+	2.    hdfs dfs -put tuomain.jar /ccc
+	create temporary function tm as 'cn.laolian.TuoMin' using jar 'hdfs://node06:8020/ccc/tuomain.jar';
+
+	create temporary function tm ad 'cn.laolian.TuoMin' using jar 'hdfs://node06:8020/ccc/tuoamin.jar'
+
 	
 	
 	
