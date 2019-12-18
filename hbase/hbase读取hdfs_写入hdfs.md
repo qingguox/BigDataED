@@ -140,7 +140,7 @@
 ### 从 hbase 中读取数据 ， 写入到 hdfs
 	
 >
-		package com.bjsxt.hbase_3;
+	package com.bjsxt.hbase_3;
 
 	import org.apache.hadoop.conf.Configuration;
 	import org.apache.hadoop.fs.Path;
