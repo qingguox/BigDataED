@@ -73,13 +73,13 @@
 	likes array<string>,
 	address map<string,string>
 	)
-	partationed by(age int)
+	partitioned by(age int)
 	row format delimited
 	fileds terminated by','
 	collection items terminated by'-'
 	map keys terminated by':'
 	
-	load data local inpath '/root/data/data' into table psn3 partation(age=10)
+	load data local inpath '/root/data/data' into table psn3 partition(age=10)
 
 ##### 2.2双分区 内部表
 
@@ -141,11 +141,15 @@
 		session_id Long comment 'The current session id '
 	);
 
-	alte table employee replace columns (
-		eid int empid int,                                // 用empid 替换 eid
-		ename string name string,                        
+	replace 是删除   并添加   删除 原有 到 add2_column 在添加 replace        eid int ekid int 用ekid 代替eid 是在原有数据库下(by)
+	alter table ps1 replace columns ( 
+		id int,
+		name string,
+		likes array<string>,
+		address map<string,string>,
+		add_column string,
+		replace_column string
 	);
-
 
 ######	2.5.4修改表的属性
 	alter table log_message set tblproperties('notes'='sfa adf a a')
