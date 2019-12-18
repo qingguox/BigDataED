@@ -5,7 +5,7 @@
 ### hive 的相关 操作 分区 建表 函数 系列化 
 
 
-#### hive 的 建表
+#### 1. hive 的 内部外部表
 	
 	1. 内部表 
 		
@@ -48,6 +48,7 @@
 	
 		load data local inpath '/root/data/data' into table psn2;
 		
+	
 >  
 	内部外部表的区别 ：
 	1、创建表的时候，内部表直接存储再默认的hdfs路径，外部表需要自己指定路径直接把指定路径下的数据插入
@@ -61,9 +62,9 @@
 	注意：hive：读时检查（实现解耦，提高数据记载的效率）
 		  关系型数据库：写时检查
 		
-#### hive下的 分区建表
+#### 2. hive下的 分区建表
 
-##### 单分区 内部表
+##### 2.1单分区 内部表
 
 	create table psn3(
 	
@@ -80,7 +81,7 @@
 	
 	load data local inpath '/root/data/data' into table psn3 partation(age=10)
 
-##### 双分区 内部表
+##### 2.2双分区 内部表
 
 	create table ps4
 	(
@@ -97,7 +98,7 @@
 
 	load data local inpath 'data/data' into table ps4 partition(age=10,sex="man");
 	
-###### 外部表 双分区
+##### 2.3 外部表 双分区
 
 	create table psn5
 	(
@@ -115,6 +116,45 @@
 
 	 //数据在  /externalTable/age=10/date 中 提前用hdfs dfs -put data /externalTable/age=10   s
 	hive下 ： msck repair table psn7;   // 刷新mysql数据库中 分区 信息    如果不刷新 select * from psn7; 是没有数据的  因为 找不到age=60分区信息  
+	
+##### 2.4 分区操作 
+	alter table ps5 add partition(sex="hh",age=60);
+	alter table ps5 drop partition(sex="hh");
+	
+	
+##### 2.5 建表 修改表
+
+
+######	2.5.1 创建表
+	create table ps6 as select * from psn5;
+	create table ps7 like ps5;  // 只复制表的结构
+
+
+######	2.5.2 重命名表
+	alter table old_table rename to new_table;
+
+
+######	2.5.3 增加列 替换列
+	alter table log_ss add columns (
+		app_name string comment 'application name',
+		session_id Long comment 'The current session id '
+	);
+
+	alte table employee replace columns (
+		eid int empid int,                                // 用empid 替换 eid
+		ename string name string,                        
+	);
+
+
+######	2.5.4修改表的属性
+	alter table log_message set tblproperties('notes'='sfa adf a a')
+
+		
+	
+	
+	
+	
+	
 	
 	
 	
