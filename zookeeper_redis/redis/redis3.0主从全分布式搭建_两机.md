@@ -147,18 +147,20 @@
 
 	 确认所有的节点都启动，接下来使用参数create 创建 (在192.168.1.237中来创建)
 
-	 /usr/local/redis-3.2.1/src/redis-trib.rb  create  --replicas  1  192.168.1.237:7000 192.168.1.237:7001  192.168.1.237:7003 192.168.1.238:7003  192.168.1.238:7004  192.168.1.238:7005
-	解释下， --replicas  1  表示 自动为每一个master节点分配一个slave节点    上面有6个节点，程序会按照一定规则生成 3个master（主）3个slave(从)
+	 /usr/local/redis-3.2.1/src/redis-trib.rb  create 
+	 --replicas  1  192.168.1.237:7000 192.168.1.237:7001  192.168.1.237:7002
+	 192.168.1.238:7003  192.168.1.238:7004  192.168.1.238:7005
+		解释下， --replicas  1  表示 自动为每一个master节点分配一个slave节点    上面有6个节点，程序会按照一定规则生成 3个master（主）3个slave(从)
 
-	前面已经提醒过的 防火墙一定要开放监听的端口，否则会创建失败。
+		前面已经提醒过的 防火墙一定要开放监听的端口，否则会创建失败。
 
-	运行中，提示Can I set the above configuration? (type 'yes' to accept): yes    //输入yes
+		运行中，提示Can I set the above configuration? (type 'yes' to accept): yes    //输入yes
 
-	接下来 提示  Waiting for the cluster to join..........  安装的时候在这里就一直等等等，没反应，傻傻等半天，看这句提示上面一句，Sending Cluster Meet Message to join the Cluster.
+		接下来 提示  Waiting for the cluster to join..........  安装的时候在这里就一直等等等，没反应，傻傻等半天，看这句提示上面一句，Sending Cluster Meet Message to join the Cluster.
 
-	这下明白了，我刚开始在一台Server上去配，也是不需要等的，这里还需要跑到Server2上做一些这样的操作。
+		这下明白了，我刚开始在一台Server上去配，也是不需要等的，这里还需要跑到Server2上做一些这样的操作。
 
-	在192.168.1.238, redis-cli -c -p 700*  分别进入redis各节点的客户端命令窗口， 依次输入 cluster meet 192.168.1.238 7000……
+		在192.168.1.238, redis-cli -c -p 700*  分别进入redis各节点的客户端命令窗口， 依次输入 cluster meet 192.168.1.238 7000……
 
 	回到Server1，已经创建完毕了。
 
