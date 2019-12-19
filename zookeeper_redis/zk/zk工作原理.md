@@ -49,13 +49,17 @@
 
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B.jpg)
 
+
+		在广播模式，一次写请求要经历以下的步
 		1.在Client向Follwer发出一个写的请求
 	　　2.Follwer把请求发送给Leader
-	　　3.Leader接收到以后开始发起投票并通知Follwer进行投票
-	　　4.Follwer把投票结果发送给Leader
-	　　5.Leader将结果汇总后如果需要写入，则开始写入同时把写入操作通知给Leader，然后commit;
-	　　6.Follwer把请求结果返回给Client　
-　　　　　
+	　　3.Leader接收到以后, 先将更新持久化到本地, Leader节点将此次更新提议(propose)给Followers，进入收集选票的流程
+	　　4.Follower节点接收请求，成功将修改持久化到本地，发送一个ACK给Leader
+	　　5.Leader接收到半数以上的ACK时，Leader将广播commit消息并在本地deliver该消息到 各个 follow。
+	　　6.Follwer把请求结果返回给Client。　
+　　　　广播协议在所有的通讯过程中使用TCP的FIFO信道，通过使用该信道，使保持有序性变得非常的容易。
+			通过FIFO信道，消息被有序的deliver。只要收到的消息一被处理，其顺序就会被保存下来。
+
 >		Follower主要有四个功能：
 
 		1. 向Leader发送请求（PING消息、REQUEST消息、ACK消息、REVALIDATE消息）；
