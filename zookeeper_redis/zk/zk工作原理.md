@@ -11,8 +11,9 @@
 	　　» Observer可以接受客户端连接，将写请求转发给leader，但observer不参加投票过程，只同步leader的状态，observer的目的是为了扩展系统，提高读取速度
 	　　» 客户端（client），请求发起方
 	　　
-	![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk%E9%9B%86%E7%BE%A4.jpg)　　 
-	![Image text]()　　　 　
+	
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk%E9%9B%86%E7%BE%A4.jpg)　　 
+[Image text]()　　　 　
 	　　• Zookeeper的核心是原子广播，这个机制保证了各个Server之间的同步。实现这个机制的协议叫做Zab协
 	　　   议。Zab协议有两种模式，它们分别是恢复模式（选主）和广播模式（同步）。当服务启动或者在领导者
 	　　　崩溃后，Zab就进入了恢复模式，当领导者被选举出来，且大多数Server完成了和leader的状态同步以后
