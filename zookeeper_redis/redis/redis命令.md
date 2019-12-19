@@ -273,7 +273,9 @@ redis 有16个数据库
 	
 ##### RDB
 	RDB定时备份内存中的数据集。服务器启动的时候，可以从 RDB 文件中恢复数据集。
-
+		
+	过程 ：。。
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/RDB%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B.jpg)
 优点
 
 - 存储的文件是紧凑的
@@ -297,6 +299,8 @@ redis 有16个数据库
 5. 当一个Redis服务器连接另外一个Redis服务器，并像对方发送SYNC命令开始一次复制操作时，如果主服务器目前没有在执行BGSAVE操作，
 或者主服务器刚刚执行完，那么主服务器就会执行GBSAVE
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%93%8D%E4%BD%9C%20RDB.jpg)
+	
 ###### AOF(append only file)
 	AOF记录服务器的所有写操作。在服务器重新启动的时候，会把所有的写操作重新执行
 	一遍，从而实现数据备份。当写操作集过大（比原有的数据集还大），Redis 会重写写操作集。
