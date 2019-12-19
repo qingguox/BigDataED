@@ -1,24 +1,30 @@
 
-					双节点 多实例
+
+#### 集群 分片 看 
+
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/redis%E9%9B%86%E7%BE%A4%E5%88%86%E6%A7%BD%E4%BD%8D.jpg)
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/%E9%9B%86%E7%BE%A4redis%E5%AD%98%E5%80%BC%20%E5%8F%96%E5%80%BC6%E4%B8%AA%E6%9C%8D%E5%8A%A1%E5%99%A8%20%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84%20%E4%B8%BB%E7%9B%B8%E5%BD%93%E4%BA%8E%E5%B0%B1%E6%98%AF%E5%93%A8%E5%85%B5.jpg)
+
+
+
+
+
+
+#### 搭建 两种 3.0
+					
+##### 双节点 多实例
 一、概述
     Redis3.0版本之后支持Cluster.     分为两台 机器
 
 1.1、redis cluster的现状
 
- 　　目前redis支持的cluster特性：
-
+ 　目前redis支持的cluster特性：
 　　1):节点自动发现
-
 　　2):slave->master 选举,集群容错
-
 　　3):Hot resharding:在线分片
-
 　　4):进群管理:cluster xxx
-
 　　5):基于配置(nodes-port.conf)的集群管理
-
 　　6):ASK 转向/MOVED 转向机制.
-
 1.2、redis cluster 架构
 
 　　1)redis-cluster架构图
@@ -225,7 +231,7 @@ yum  install  gcc
 	 
 	 
 	 
-全分布式redis集群搭建：单节点多实例
+###### 全分布式redis集群搭建：单节点多实例
 
 
 	1 删除2.8 bin目录及文件: 
