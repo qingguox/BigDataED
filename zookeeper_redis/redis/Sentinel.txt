@@ -1,0 +1,32 @@
+﻿Sentinel实验
+
+编译安装3台redis，node1、node2、node3
+node1为master
+node2、node3是Slaves，配置文件中slaveof 192.168.56.201 6379
+分别启动node1、node2、node3的redis服务
+
+Sentinel配置
+在3个节点的家目录下，创建sentinel.conf
+vim sentinel.conf
+port 26379
+sentinel monitor node1 192.168.56.201 6379 2
+
+# cp redis-2.8.18/src/redis-sentinel /opt/sxt/redis/bin
+# redis-sentinel sentinel.conf
+
+
+
+分别在3个节点使用redis-cli
+测试redis主从复制效果
+
+
+将node1服务停掉
+# service redisd stop
+隔一会会启动failover
+
+在node2、node3上测试
+
+# redis-cli -h 192.168.56.201 -p 26379 info sentinel
+# redis-cli -p 26379 SENTINEL master node1
+# redis-cli -p 26379 SENTINEL slaves node1
+# redis-cli -p 26379 SENTINEL get-master-addr-by-name node1
