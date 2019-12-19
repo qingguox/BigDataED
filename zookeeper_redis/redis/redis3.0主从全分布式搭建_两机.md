@@ -1,6 +1,7 @@
-一、概述
 
-    Redis3.0版本之后支持Cluster.
+					双节点 多实例
+一、概述
+    Redis3.0版本之后支持Cluster.     分为两台 机器
 
 1.1、redis cluster的现状
 
@@ -22,7 +23,7 @@
 
 　　1)redis-cluster架构图
 
-
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/redis3.0%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B.jpg)
 
 　　架构细节:
 
@@ -34,11 +35,9 @@
 
 　　(4)redis-cluster把所有的物理节点映射到[0-16383]slot上,cluster 负责维护node<->slot<->value
 
- 
-
    2) redis-cluster选举:容错
-
-
+   
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/redis3.0%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B2.jpg)
 
 　　(1)领着选举过程是集群中所有master参与,如果半数以上master节点与master节点通信超过(cluster-node-timeout),认为当前master节点挂掉.
 
@@ -65,7 +64,7 @@
   3、创建redis节点
 
      测试我们选择2台服务器，分别为：192.168.1.237，192.168.1.238.每分服务器有3个节点。
-
+	237 上是带有 哨兵的主节点  238是每一个主机的备机 ，如果连接备机查找数据，就会跳转到相应的主机去。
   我先在192.168.1.237创建3个节点：
 
   cd /usr/local/
@@ -222,3 +221,136 @@ yum  install  gcc
     解决办法：原因是没有安装jemalloc内存分配器，可以安装jemalloc 或 直接
 
      输入make MALLOC=libc  && make install
+	 
+	 
+	 
+	 
+全分布式redis集群搭建：单节点多实例
+
+
+1 删除2.8 bin目录及文件: 
+	#   cd /opt/sxt/redis
+	#   rm -fr bin
+
+2 ftp 上传redis-cluster 目录到根目录 
+	
+
+2 redis-cluster目录下解压redis 3.0 : 
+	
+	#  tar xf redis.....gz
+
+3 redis目录下make命令编译拷贝bin至 /opt/sxt/redis/下
+
+
+
+	#  make && make PREFIX=/opt/sxt/redis install
+
+	make不成功时    用make MALLOC=libc	
+	成功后会有哨兵显示
+
+4 测试 是否成功
+	#  re+table
+
+5 安装rubby编译环境
+
+	# yum -y install ruby rubygems 
+
+6 redis-cluster 目录下安装 redis gem 模块:
+		
+	# gem install --local redis-3.3.0.gem
+
+
+8 创建文件目录、主从节点并匹配端口（已完成）:
+	   
+	redis集群 3.x版本
+	物理节点1个	
+	指定3个主节点端口为7000、7001、7002
+	对应的3个从节点端口为7003、7004、7005
+
+	mkdir cluster-test
+	cd cluster-test
+	mkdir 7000 7001 7002 7003 7004 7005
+
+9 创建配置文件redis.conf（启集群模式: 3.0 支持单机集群，但必须在配置文件中说明) （已完成）
+  
+	指定不冲突的端口 及 <对应端口号>
+        
+	文件内容：
+		
+	声明支持集群模式
+	指定端口
+	
+
+	在7000-7005每个目录中均放入redis.conf
+	redis.conf内容如下：
+	
+	cluster-enabled yes
+	port 700X 
+
+
+
+11 创建集群，槽位认领
+
+在安装目录下的src中,找到 redis-trib.rb 这是rubby脚本执行程序，完成redis3.0集群创建
+
+# ./redis-trib.rb create --replicas 1 127.0.0.1:7000 127.0.0.1:7001 \
+127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
+
+以下是分配的信息展示
+Using 3 masters:
+127.0.0.1:7000
+127.0.0.1:7001
+127.0.0.1:7002
+Adding replica 127.0.0.1:7003 to 127.0.0.1:7000
+Adding replica 127.0.0.1:7004 to 127.0.0.1:7001
+Adding replica 127.0.0.1:7005 to 127.0.0.1:7002
+>>> Performing Cluster Check (using node 127.0.0.1:7000)
+M: d4cbae0d69b87a3ca2f9912c8618c2e69b4d8fab 127.0.0.1:7000
+   slots:0-5460 (5461 slots) master
+M: bc2e33db0c4f6a9065792ea63e0e9b01eda283d7 127.0.0.1:7001
+   slots:5461-10922 (5462 slots) master
+M: 5c2217a47e03331752fdf89491e253fe411a21e1 127.0.0.1:7002
+   slots:10923-16383 (5461 slots) master
+M: 3d4b31af7ae60e87eef964a0641d43a39665f8fc 127.0.0.1:7003
+   slots: (0 slots) master
+   replicates d4cbae0d69b87a3ca2f9912c8618c2e69b4d8fab
+M: 710ba3c9b3bda175f55987eb69c1c1002d28de42 127.0.0.1:7004
+   slots: (0 slots) master
+   replicates bc2e33db0c4f6a9065792ea63e0e9b01eda283d7
+M: 7e723cbd01ef5a4447539a5af7b4c5461bf013df 127.0.0.1:7005
+   slots: (0 slots) master
+   replicates 5c2217a47e03331752fdf89491e253fe411a21e1
+   
+自动分配了主从，自动分配了slots，所有槽都有节点处理，集群上线
+
+
+10启动所有服务，要进入子目录启动服务
+	# cd 700x
+	# redis-server redis.conf
+
+	# ss -tanl | grep 700  
+
+客户端连接
+redis-cli -p 7000 -c  c:是以集群方式进入 哦  可以查看集群下的所有key还存储信息
+
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
