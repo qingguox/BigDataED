@@ -3,7 +3,7 @@
 
 #### 三个哨兵 监控一个master 
 
-	![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/2.8/redis%E5%8D%95%E4%B8%AA%E5%93%A8%E5%85%B5.png)
 	1.创建redis目录： mkdir redis
 
 	2.在redis目录下分别创建3个端口目录： 6380,6381,6382
@@ -39,7 +39,8 @@
 
  ##### 网状的sentinel  相当于多个节点启动 哨兵 监控
 	一个几点监控 一个master 两个 slave
-	
+
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/2.8/redis%E5%93%A8%E5%85%B5%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg)
 	
 	
   
