@@ -74,9 +74,10 @@
 
 	在一致性哈希算法中，如果一个节点挂了，受影响的数据仅仅是此节点到环空间前一个节点（沿着逆时针方向行走遇到的第一个节点）之间的数据，其它不受影响。增加一个节点也同理。
 
-	燃鹅，一致性哈希算法在节点太少时，容易因为节点分布不均匀而造成缓存热点的问题。为了解决这种热点问题，一致性 hash 算法引入了虚拟节点机制，即对每一个节点计算多个 hash，每个计算结果位置都放置一个虚拟节点。这样就实现了数据的均匀分布，负载均衡。
+	燃鹅，一致性哈希算法在节点太少时，容易因为节点分布不均匀而造成缓存热点的问题。为了解决这种热点问题，
+	一致性 hash 算法引入了虚拟节点机制，即对每一个节点计算多个 hash，每个计算结果位置都放置一个虚拟节点。这样就实现了数据的均匀分布，负载均衡。
 
-	640?wx_fmt=png
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/%E4%B8%80%E8%87%B4%E6%80%A7hash%E7%AE%97%E6%B3%95.jpg)
 
 	redis cluster 的 hash slot 算法
 
@@ -85,6 +86,7 @@
 	redis cluster 中每个 master 都会持有部分 slot，比如有 3 个 master，那么可能每个 master 持有 5000 多个 hash slot。hash slot 让 node 的增加和移除很简单，增加一个 master，就将其他 master 的 hash slot 移动部分过去，减少一个 master，就将它的 hash slot 移动到其他 master 上去。移动 hash slot 的成本是非常低的。客户端的 api，可以对指定的数据，让他们走同一个 hash slot，通过 hash tag 来实现。
 
 	任何一台机器宕机，另外两个节点，不影响的。因为 key 找的是 hash slot，不是机器。
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/redis/photo/p2.jpg)
 
 	640?wx_fmt=png
 
@@ -95,7 +97,8 @@
 	redis cluster 的高可用的原理，几乎跟哨兵是类似的。
 
 	判断节点宕机
-	如果一个节点认为另外一个节点宕机，那么就是 pfail，主观宕机。如果多个节点都认为另外一个节点宕机了，那么就是 fail，客观宕机，跟哨兵的原理几乎一样，sdown，odown。
+	如果一个节点认为另外一个节点宕机，那么就是 pfail，主观宕机。
+	如果多个节点都认为另外一个节点宕机了，那么就是 fail，客观宕机，跟哨兵的原理几乎一样，sdown，odown。
 
 	在 cluster-node-timeout 内，某个节点一直没有返回 pong，那么就被认为 pfail。
 
