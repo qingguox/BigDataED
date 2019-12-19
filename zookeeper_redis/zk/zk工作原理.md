@@ -13,7 +13,7 @@
 	　　
 	
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk%E9%9B%86%E7%BE%A4.jpg)　　 
-[Image text]()　　　 　
+[Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk%E5%90%84%E7%A7%8D%E8%A7%92%E8%89%B2.png)　　　 　
 	　　• Zookeeper的核心是原子广播，这个机制保证了各个Server之间的同步。实现这个机制的协议叫做Zab协
 	　　   议。Zab协议有两种模式，它们分别是恢复模式（选主）和广播模式（同步）。当服务启动或者在领导者
 	　　　崩溃后，Zab就进入了恢复模式，当领导者被选举出来，且大多数Server完成了和leader的状态同步以后
@@ -42,6 +42,8 @@
 #####  4、Zookeeper节点数据操作流程
 
 >	流程： 
+
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B.jpg)
 
 		1.在Client向Follwer发出一个写的请求
 	　　2.Follwer把请求发送给Leader
@@ -74,8 +76,10 @@
 	　　• 接着B提案说，我要选自己，A你同意吗；A说，我已经超半数同意当选，你的提案无效；C说，A已经超半数同意当选，B提案无效。
 	　　• 接着C提案说，我要选自己，A你同意吗；A说，我已经超半数同意当选，你的提案无效；B说，A已经超半数同意当选，C的提案无效。
 	　　• 选举已经产生了Leader，后面的都是follower，只能服从Leader的命令。而且这里还有个小细节，就是其实谁先启动谁当头。
-	　　 
-	　　 
+
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk工作状态.jpg)	　　 
+	
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/zookeeper_redis/zk/photo/zk%E9%80%89%E4%B8%BE%E7%8A%B6%E6%80%81.jpg)　　 
 #####  6、zxid
 	　　• znode节点的状态信息中包含czxid, 那么什么是zxid呢?
 	　　• ZooKeeper状态的每一次改变, 都对应着一个递增的Transaction id, 该id称为zxid. 由于zxid的递增性质, 如果zxid1小于zxid2, 那么zxid1肯定先于zxid2发生.
