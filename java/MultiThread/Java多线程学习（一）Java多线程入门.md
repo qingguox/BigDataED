@@ -68,7 +68,7 @@
 	进程是程序的一次执行过程，是系统运行程序的基本单位，因此进程是动态的。系统运行一个程序即是一个进程从创建，
 	运行到消亡的过程。如下图所示，在 windows 中通过查看任务管理器的方式，我们就可以清楚看到 window 当前运行的进程（.exe文件的运行）。
 	
-![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E8%BF%9B%E7%A8%8B.jpg)
 
 1.3 何为线程？
 线程与进程相似，但线程是一个比进程更小的执行单位。一个进程在其执行的过程中可以产生多个线程。与进程不同的是同类的多个线程共享同一块内存空间和一组系统资源，所以系统在产生一个线程，或是在各个线程之间作切换工作时，负担要比进程小得多，也正因为如此，线程也被称为轻量级进程。
@@ -214,7 +214,7 @@ Run.java
 
 运行结果:
 
-![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/4.1.jpg)
 
 可以看出每个线程都有一个属于自己的实例变量count，它们之间互不影响。我们再来看看另一种情况
 	
@@ -255,7 +255,7 @@ Run.java
 
 运行结果 ：
 
-![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/4.2.jpg)
 
 	可以看出这里已经出现了错误，我们想要的是依次递减的结果。为什么呢？？
 
@@ -324,6 +324,7 @@ yield()方法的作用是放弃当前的CPU资源，将它让给其他的任务�
 六 如何停止一个线程呢？
 stop(),suspend(),resume()（仅用于与suspend()一起使用）这些方法已被弃用，所以我这里不予讲解。
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/6.1.jpg)
 6.1 使用interrupt()方法
 我们上面提到了interrupt()方法，先来试一下interrupt()方法能不能停止线程
 
@@ -392,7 +393,7 @@ stop(),suspend(),resume()（仅用于与suspend()一起使用）这些方法已�
 
 运行结果:
 
-![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/6.1.2.jpg)
 
 for循环虽然停止执行了，但是for循环下面的语句还是会执行，说明线程并未被停止。
 
@@ -421,7 +422,7 @@ for循环虽然停止执行了，但是for循环下面的语句还是会执行�
 
 运行结果：
 
-![Iamge text]()
+![Iamge text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/6.2.jpg)
 
 当然还有其他停止线程的方法，后面再做介绍。
 
@@ -476,7 +477,7 @@ Run.java：
 
 运行结果 ：
 	
-![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/7.1.jpg)
 
 八 Java多线程分类
 8.1 多线程分类
@@ -538,7 +539,7 @@ Run.java:
 	
 运行结果：
 
-![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/8.1.jpg)
 	
 
 
