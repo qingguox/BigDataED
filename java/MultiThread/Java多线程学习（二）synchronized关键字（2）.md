@@ -421,10 +421,11 @@ Run.java
 
 线程A,B和线程C持有的锁不一样，所以A和B运行同步，但是和C运行不同步。@SuppressWarnings("static-access") 加了这句 b才能输出来
 
+<font color="#FF0000">
+1. 当synchronized修饰一个static方法时，多线程下，获取的是类锁（即Class本身，注意：不是实例），作用范围是整个静态方法，作用的对象是这个类的所有对象。
 
-* 1. 当synchronized修饰一个static方法时，多线程下，获取的是类锁（即Class本身，注意：不是实例），作用范围是整个静态方法，作用的对象是这个类的所有对象。
-
-* 2. 当synchronized修饰一个非static方法时，多线程下，获取的是对象锁（即类的实例对象），作用范围是整个方法，作用对象是调用该方法的对象。
+2. 当synchronized修饰一个非static方法时，多线程下，获取的是对象锁（即类的实例对象），作用范围是整个方法，作用对象是调用该方法的对象。
+</font>
 
 #### 六 数据类型String的常量池属性
 在Jvm中具有String常量池缓存的功能
