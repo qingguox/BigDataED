@@ -116,6 +116,7 @@ a num=100停顿一会才执行
 
 答案是：会异步(同时 进行 )调用非synchronized类型方法，解决办法也很简单在非synchronized类型方法前加上synchronized关键字即可。
 			同步 （ 串行执行）
+			
 #### 五 脏读
 发生脏读的情况实在读取实例变量时，此值已经被其他线程更改过。
 
@@ -189,11 +190,14 @@ Test.java
 
 运行结果：
 
+getValue method thread name = main username = B, password = AA
+setValue method thread name is Thread-0usename =B , password =BB
 
-解决办法：getValue()方法前加上synchronized关键字即可。
+解决办法：getValue()方法前加上synchronized关键字即可。 === getvalue 在锁对象中。
 
 加上synchronized关键字后的运行结果：
-
+setValue method thread name is Thread-0usename =B , password =BB
+getValue method thread name = main username = B, password = BB
 
 #### 六 synchronized锁重入
 “可重入锁”概念是：自己可以再次获取自己的内部锁。比如一个线程获得了某个对象的锁，此时这个对象锁还没有释放，当其再次想要获取这个对象的锁的时候还是可以获取的，如果不可锁重入的话，就会造成死锁。
@@ -240,6 +244,9 @@ Run.java
 	
 运行结果：
 
+	service1
+	service2
+	service3
 另外可重入锁也支持在父子类继承的环境中
 
 Main.java：
@@ -300,6 +307,16 @@ Run.java：
 	
 运行结果：
 
+	Sub print i = 9
+	main print i = 8
+	Sub print i = 7
+	main print i = 6
+	Sub print i = 5
+	main print i = 4
+	Sub print i = 3
+	main print i = 2
+	Sub print i = 1
+	main print i = 0
 
 说明当存在父子类继承关系时，子类是完全可以通过“可重入锁”调用父类的同步方法。
 
