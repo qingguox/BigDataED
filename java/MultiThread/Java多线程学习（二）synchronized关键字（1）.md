@@ -114,7 +114,7 @@ a num=100停顿一会才执行
 
 那么我们思考一下当多个线程访问的是同一个对象中的非synchronized类型方法会是什么效果？
 
-答案是：会异步调用非synchronized类型方法，解决办法也很简单在非synchronized类型方法前加上synchronized关键字即可。
+答案是：会同步调用非synchronized类型方法，解决办法也很简单在非synchronized类型方法前加上synchronized关键字即可。
 
 #### 五 脏读
 发生脏读的情况实在读取实例变量时，此值已经被其他线程更改过。
