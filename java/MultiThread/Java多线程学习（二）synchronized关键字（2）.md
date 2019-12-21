@@ -36,16 +36,90 @@ Task.java
 	
 CommonUtils.java
 
+	public class CommonUtils {
+
+		public static long beginTime1;
+		public static long endTime1;
+
+		public static long beginTime2;
+		public static long endTime2;
+	}
+
 MyThread1.java
 
+	public class MyThread1 extends Thread {
+		private Task task;
+		public MyThread1(Task task) {
+			super();
+			this.task = task;
+		}
+		@Override
+		public void run() {
+			super.run();
+			CommonUtils.beginTime1 = System.currentTimeMillis();
+			task.doLongTimeTask();
+			CommonUtils.endTime1 = System.currentTimeMillis();
+		}
+	}
 
 MyThread2.java
 
-
+	public class MyThread2 extends Thread {
+		private Task task;
+		public MyThread2(Task task) {
+			super();
+			this.task = task;
+		}
+		@Override
+		public void run() {
+			super.run();
+			CommonUtils.beginTime2 = System.currentTimeMillis();
+			task.doLongTimeTask();
+			CommonUtils.endTime2 = System.currentTimeMillis();
+		}
+	}
 Run.java
+	public class Run {
 
-运行结果：
+		public static void main(String[] args) {
+			Task task = new Task();
 
+			MyThread1 thread1 = new MyThread1(task);
+			thread1.start();
+
+			MyThread2 thread2 = new MyThread2(task);
+			thread2.start();
+
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			long beginTime = CommonUtils.beginTime1;
+			if (CommonUtils.beginTime2 < CommonUtils.beginTime1) {
+				beginTime = CommonUtils.beginTime2;
+			}
+
+			long endTime = CommonUtils.endTime1;
+			if (CommonUtils.endTime2 > CommonUtils.endTime1) {
+				endTime = CommonUtils.endTime2;
+			}
+
+			System.out.println("耗时：" + ((endTime - beginTime) / 1000));
+		}
+	}
+运行结果：               同步 进行  就是有点耗时
+
+	begin task 
+	长时间处理任务后 从远程返回的值1 threadName=Thread-0
+	长时间处理任务后 从远程返回的值2 threadName=Thread-0
+	end task 
+	begin task 
+	长时间处理任务后 从远程返回的值1 threadName=Thread-1
+	长时间处理任务后 从远程返回的值2 threadName=Thread-1
+	end task 
+	耗时： 6
 
 从运行时间上来看，synchronized方法的问题很明显。可以使用synchronized同步块来解决这个问题。
 但是要注意synchronized同步块的使用方式，如果synchronized同步块使用不好的话并不会带来效率的提升。
@@ -82,8 +156,17 @@ Run.java
 	}
 
 
-运行结果：
-
+运行结果：     没有对象锁了  === 是 锁住了 方法中的代码块 所以 两个线程都可以 访问 不过到sy那块阻塞。
+	
+	begin task 
+	begin task 
+	长时间处理任务后 从远程返回的值1 threadName=Thread-1
+	长时间处理任务后 从远程返回的值2 threadName=Thread-0
+	end task 
+	长时间处理任务后 从远程返回的值1 threadName=Thread-0
+	长时间处理任务后 从远程返回的值2 threadName=Thread-0
+	end task 
+	耗时： 3
 
 从上面代码可以看出当一个线程访问一个对象的synchronized同步代码块时，另一个线程任然可以访问该对象非synchronized同步代码块。
 
