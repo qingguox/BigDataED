@@ -1,6 +1,6 @@
 转载请备注地址：https://blog.csdn.net/qq_34337272/article/details/79670775
 
-synchronized关键字加到static静态方法和synchronized(class)代码块上都是是给Class类上锁，而synchronized关键字加到非static静态方法上是给对象上锁。
+\<font color="red">synchronized关键字加到static静态方法和synchronized(class)代码块上都是是给Class类上锁，而synchronized关键字加到非static静态方法上是给对象上锁。</font>
 
 (2) synchronized同步语句块
 本节思维导图：
