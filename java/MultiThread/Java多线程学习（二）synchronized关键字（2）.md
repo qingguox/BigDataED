@@ -1,5 +1,6 @@
 转载请备注地址：https://blog.csdn.net/qq_34337272/article/details/79670775
 
+synchronized关键字加到static静态方法和synchronized(class)代码块上都是是给Class类上锁，而synchronized关键字加到非static静态方法上是给对象上锁。
 
 (2) synchronized同步语句块
 本节思维导图：
@@ -267,6 +268,10 @@ Run1_1.java
 
 运行结果：
 
+	TestMethod _getLock time =1576913721753Run ThreadName a
+	TestMethod releaseLock time =1576913723754Run ThreadName  a
+	TestMethod _getLock time =1576913723754Run ThreadName b
+	TestMethod releaseLock time =1576913725755Run ThreadName  b
 可以看出如下图所示，两个线程使用了同一个“对象监视器”,所以运行结果是同步的。
 那么，如果使用不同的对象监视器会出现什么效果呢？
 
@@ -291,6 +296,10 @@ Run1_1.java
 
 运行结果：
 
+	TestMethod _getLock time =1576913853972Run ThreadName a
+	TestMethod _getLock time =1576913853972Run ThreadName b
+	TestMethod releaseLock time =1576913855973Run ThreadName  a
+	TestMethod releaseLock time =1576913855973Run ThreadName  b
 可以看出如下图所示，两个线程使用了不同的“对象监视器”,所以运行结果不是同步的了。
 
 
