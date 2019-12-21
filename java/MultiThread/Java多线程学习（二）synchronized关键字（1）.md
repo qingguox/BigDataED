@@ -105,9 +105,9 @@ a num=100停顿一会才执行
 
 '为什么会这样呢？'
 
-这是因为<font color="red">synchronized取得的锁都是对象锁</font>，而不是把一段代码或方法当做锁。所以在上面的实例中，哪个线程先执行带synchronized关键字的方法，则哪个线程就持有该方法所属对象的锁Lock，那么其他线程只能呈等待状态，前提是多个线程访问的是同一个对象。本例中很显然是两个对象。
+这是因为 <span style="color: red">synchronized取得的锁都是对象锁</span>，而不是把一段代码或方法当做锁。所以在上面的实例中，哪个线程先执行带synchronized关键字的方法，则哪个线程就持有该方法所属对象的锁Lock，那么其他线程只能呈等待状态，前提是多个线程访问的是同一个对象。本例中很显然是两个对象。
 
-在本例中创建了两个HasSelfPrivateNum类对象，<font color="red">所以就产生了两个锁。</font>当ThreadA的引用执行到addI方法中的runThread.sleep(2000)语句时，ThreadB就会“乘机执行”。所以才会导致执行结果如上图所示（备注：由于runThread.sleep(2000)，“a num=100”停顿了两秒才输出）
+在本例中创建了两个HasSelfPrivateNum类对象，<span style="color: red">所以就产生了两个锁。</span>当ThreadA的引用执行到addI方法中的runThread.sleep(2000)语句时，ThreadB就会“乘机执行”。所以才会导致执行结果如上图所示（备注：由于runThread.sleep(2000)，“a num=100”停顿了两秒才输出）
 
 #### 四 synchronized方法与锁对象
 通过上面我们知道synchronized取得的锁都是对象锁，而不是把一段代码或方法当做锁。如果多个线程访问的是同一个对象，哪个线程先执行带synchronized关键字的方法，则哪个线程就持有该方法，那么其他线程只能呈等待状态。如果多个线程访问的是多个对象则不一定，因为多个对象会产生多个锁。
