@@ -15,7 +15,7 @@
 面向字节： PipedOutputStream、 PipedInputStream
 
 面向字符: PipedWriter、 PipedReader
-
+					注意 要 建立连接  outStream.connect(inputstream) / in.connect（out）
 #### 1.1 第一个管道输入/输出流实例
 完整代码：https://github.com/Snailclimb/threadDemo/tree/master/src/pipedInputOutput
 
@@ -82,6 +82,11 @@ readMethod方法
 threadWrite运行writeMethod方法。然后 **通过outputStream.connect(inputStream)或inputStream.connect(outputStream)使两个管道流产生链接**，这样就可以将数据进行输入与输出了。
 
 运行结果：
+
+	read : 
+	Writer:  
+	123456789101112131415161718192021222324252627282930
+	123456789101112131415161718192021222324252627282930
 
 ### 二 Thread.join()的使用
 在很多情况下，主线程生成并起动了子线程，如果子线程里要进行大量的耗时的运算，**主线程往往将于子线程之前结束，但是如果主线程处理完其他的事务后，需要用到子线程的处理结果，也就是主线程需要等待子线程执行完成之后再结束，这个时候就要用到join()方法了。另外，一个线程需要等待另一个线程也需要用到join()方法。**
