@@ -136,11 +136,17 @@ ReentrantLockTest.java
 
 Condition接口的常见方法：
 
-方法名称	描述
-void await()	相当于Object类的wait方法
-boolean await(long time, TimeUnit unit)	相当于Object类的wait(long timeout)方法
-signal()	相当于Object类的notify方法
-signalAll()	相当于Object类的notifyAll方法
+| 方法名称       	| 描述    |
+| --------   		| -----:   |
+| void await()        | 相当于Object类的wait方法    |
+| boolean await(long time, TimeUnit unit)        | 相当于Object类的wait(long timeout)方法 |
+| signal()        	| 相当于Object类的notify方法      |
+| signalAll()       | 相当于Object类的notifyAll方法  |
+	
+	
+	
+	
+	
 #### 2.3 使用Condition实现等待/通知机制
 ##### 1. 使用单个Condition实例实现等待/通知机制：
 
@@ -481,22 +487,24 @@ FairorNofairLock.java
 #### 3.2 ReentrantReadWriteLock的特性与常见方法
 ##### ReentrantReadWriteLock的特性：
 
-    | 水果        | 价格    |  数量  |
-    | --------   | -----:   | :----: |
-    | 香蕉        | $1      |   5    |
-    | 苹果        | $1      |   6    |
-    | 草莓        | $1      |   7    |
+| 特性        | 说明    |  
+| --------   | -----:   | 
+| 公平性选择  | 支持非公平（默认）和公平的锁获取方式，吞吐量上来看还是非公平优于公平  |
+| 重进入      | 该锁支持重进入，以读写线程为例：读线程在获取了读锁之后，能够再次获取读锁。而写线程在获取了写锁之后能够再次获取写锁也能够同时获取读锁。|
+| 锁降级      | 遵循获取写锁、获取读锁再释放写锁的次序，写锁能够降级称为读锁 。|
 
-特性		说明
-公平性选择	支持非公平（默认）和公平的锁获取方式，吞吐量上来看还是非公平优于公平
-重进入		该锁支持重进入，以读写线程为例：读线程在获取了读锁之后，能够再次获取读锁。而写线程在获取了写锁之后能够再次获取写锁也能够同时获取读锁
-锁降级		遵循获取写锁、获取读锁再释放写锁的次序，写锁能够降级称为读锁
-ReentrantReadWriteLock常见方法：
-构造方法
+		
+	
+		
+		
+##### ReentrantReadWriteLock常见方法：
+构造方法：
 
-方法名称					描述
-ReentrantReadWriteLock()	创建一个 ReentrantReadWriteLock()的实例
-ReentrantReadWriteLock(boolean fair)创建一个特定锁类型（公平锁/非公平锁）的ReentrantReadWriteLock的实例
+| 方法名称        	| 描述    |
+| --------   		| -----:   |
+| ReentrantReadWriteLock() | 创建一个 ReentrantReadWriteLock()的实例。|
+| ReentrantReadWriteLock(boolean fair)        |创建一个特定锁类型（公平锁/非公平锁）的ReentrantReadWriteLock的实例 。|
+
 常见方法：
 和ReentrantLock类 类似这里就不列举了。
 
