@@ -160,7 +160,31 @@ Run.java
 	}
 
 运行结果：
-
+	
+	count = 99
+	count = 99
+	count = 99
+	count = 99
+	count = 55
+	count = 99
+	count = 99
+	count = 99
+	count = 99
+	count = 12
+	count = 99
+	count = 99
+	count = 99
+	count = 13
+	count = 99
+	count = 99
+	count = 88
+	count = 99
+	count = 99
+	count = 99
+	count = 99
+	count = 99
+	count = 99
+	
 上面的“count=i;”是一个原子操作，但是运行结果大部分都是正确结果99，但是也有部分不是99的结果。
 
 解决办法：
