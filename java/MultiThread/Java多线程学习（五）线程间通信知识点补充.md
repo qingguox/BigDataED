@@ -119,6 +119,8 @@ Test.java
 	
 运行结果:
 
+	我想当threadTest对象执行完毕后我再执行
+	我想先执行
 
 可以看到子线程中后被执行，这里的例子只是一个简单的演示，我们想一下：假如子线程运行的结果被主线程运行需要怎么办？ sleep方法？ 当然可以，但是子线程运行需要的时间是不确定的，所以sleep多长时间当然也就不确定了。这里就需要使用join方法解决上面的问题。
 
@@ -187,9 +189,12 @@ JoinLongTest.java
 
 运行结果：
 
+	begin ===1577003949085
+	end 主 ===1577003951085
+	
 不管是运行threadTest.join(2000)还是Thread.sleep(2000)， “end timer=1522036620288”语句的输出都是间隔两秒，“end timer=1522036620288”语句输出后该程序还会运行一段时间，因为线程中的run方法中有Thread.sleep(10000)语句。
 
-另外threadTest.join(2000) 和Thread.sleep(2000) 和区别在于：** Thread.sleep(2000)不会释放锁，threadTest.join(2000)会释放锁 。**
+另外threadTest.join(2000) 和Thread.sleep(2000) 和区别在于：**Thread.sleep(2000)不会释放锁，threadTest.join(2000)会释放锁 。**
 
 ### 三 ThreadLocal的使用
 变量值的共享可以使用public static变量的形式，所有线程都使用一个public static变量。如果想**实现每一个线程都有自己的共享变量该如何解决呢？**JDK中提供的**ThreadLocal**类正是为了解决这样的问题。ThreadLocal类主要解决的就是让每个线程绑定自己的值，可以将ThreadLocal类形象的比喻成存放数据的盒子，盒子中可以存储每个线程的私有数据。
