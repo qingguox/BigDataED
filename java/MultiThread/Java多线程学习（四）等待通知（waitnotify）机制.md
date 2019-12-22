@@ -226,7 +226,7 @@ synchronized关键字可以将任何一个Object对象作为同步对象来看�
 
 运行效果如下：	
 
-
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/b.notify%E5%90%8EB%E9%87%8Asynchronized%E5%90%8EA%E7%BA%BF%E7%A8%8B%E6%89%8D%E8%83%BD%E5%9C%A8%E9%94%81%E6%B1%A0%E4%B8%AD%E8%8E%B7%E5%BE%97%E9%94%81.jpg)
 
 这也验证了我们刚开始的结论：必须执行完notify()方法所在的synchronized代码块后才释放。
 
