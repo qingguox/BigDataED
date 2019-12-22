@@ -38,16 +38,255 @@
 	wait(long)		超时等待一段时间，这里的参数时间是毫秒，也就是等待长达n毫秒，如果没有通知就超时返回
 	wait(long，int)	对于超时时间更细力度的控制，可以达到纳秒
 
+二 等待/通知机制的实现
+2.1 我的第一个等待/通知机制程序
+MyList.java
+
+	public class MyList {
+		private static List<String> list = new ArrayList<String>();
+
+		public static void add() {
+			list.add("anyString");
+		}
+
+		public static int size() {
+			return list.size();
+		}
+
+	}
+	
+ThreadA.java
+
+	public class ThreadA extends Thread {
+		private Object lock;
+		public ThreadA(Object lock) {
+			super();
+			this.lock = lock;
+		}
+		@Override
+		public void run() {
+			try {
+				synchronized (lock) {
+					if (MyList.size() != 5) {
+						System.out.println("wait begin "
+								+ System.currentTimeMillis());
+						lock.wait();
+						System.out.println("wait end  "
+								+ System.currentTimeMillis());
+					}
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+ThreadB.java
+
+	public class ThreadB extends Thread {
+		private Object lock;
+
+		public ThreadB(Object lock) {
+			super();
+			this.lock = lock;
+		}
+
+		@Override
+		public void run() {
+			try {
+				synchronized (lock) {
+					for (int i = 0; i < 10; i++) {
+						MyList.add();
+						if (MyList.size() == 5) {
+							lock.notify();
+							System.out.println("已发出通知！");
+						}
+						System.out.println("添加了" + (i + 1) + "个元素!");
+						Thread.sleep(1000);
+					}
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+Run.java
+
+	public class Run {
+		public static void main(String[] args) {
+			try {
+				Object lock = new Object();
+				ThreadA a = new ThreadA(lock);
+				a.start();
+				Thread.sleep(50);
+				ThreadB b = new ThreadB(lock);
+				b.start();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+运行结果：
 
 
 
+从运行结果:”wait end 1521967322359”最后输出可以看出，notify()执行后并不会立即释放锁。下面我们会补充介绍这个知识点。
+
+synchronized关键字可以将任何一个Object对象作为同步对象来看待，而Java为每个Object都实现了等待/通知（wait/notify）机制的相关方法，它们必须用在synchronized关键字同步的Object的临界区内。通过调用wait()方法可以使处于临界区内的线程进入等待状态，同时释放被同步对象的锁。而notify()方法可以唤醒一个因调用wait操作而处于阻塞状态中的线程，使其进入就绪状态。被重新唤醒的线程会视图重新获得临界区的控制权也就是锁，并继续执行wait方法之后的代码。如果发出notify操作时没有处于阻塞状态中的线程，那么该命令会被忽略。
+
+如果我们这里不通过等待/通知（wait/notify）机制实现，而是使用如下的while循环实现的话，我们上面也讲过会有很大的弊端。
+
+	while(MyList.size() == 5){
+		doSomething();
+	}
+	
+2.2线程的基本状态
+上面几章的学习中我们已经掌握了与线程有关的大部分API，这些API可以改变线程对象的状态。如下图所示：	
+	
+	
+	
+	
+1. 新建(new)：新创建了一个线程对象。
+2. 可运行(runnable)：线程对象创建后，其他线程(比如main线程）调用了该对象的start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获 取cpu的使用权。
+3. 运行(running)：可运行状态(runnable)的线程获得了cpu时间片（timeslice），执行程序代码。
+4. 阻塞(block)：阻塞状态是指线程因为某种原因放弃了cpu使用权，也即让出了cpu timeslice，暂时停止运行。直到线程进入可运行(runnable)状态，才有 机会再次获得cpu timeslice转到运行(running)状态。阻塞的情况分三种：
+
+(一). 等待阻塞：运行(running)的线程执行o.wait()方法，JVM会把该线程放 入等待队列(waitting queue)中
+
+
+(二). **同步阻塞**：运行(running)的线程在获取对象的同步锁时，若该同步锁 被别的线程占用，则JVM会把该线程放入锁池(lock pool)中。
+
+(三). **其他阻塞**: 运行(running)的线程执行Thread.sleep(long ms)或t.join()方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入可运行(runnable)状态。
+
+5. 死亡(dead)：线程run()、main()方法执行结束，或者因异常退出了run()方法，则该线程结束生命周期。死亡的线程不可再次复生。
+
+备注：
+可以用早起坐地铁来比喻这个过程：
+
+还没起床：sleeping
+
+起床收拾好了，随时可以坐地铁出发：Runnable
+
+等地铁来：Waiting
+
+地铁来了，但要排队上地铁：I/O阻塞
+
+上了地铁，发现暂时没座位：synchronized阻塞
+
+地铁上找到座位：Running
+
+到达目的地：Dead
+
+2.3 notify()锁不释放
+当方法wait()被执行后，锁自动被释放，但执行完notify()方法后，锁不会自动释放。必须执行完notify()方法所在的synchronized代码块后才释放。
+
+下面我们通过代码验证一下：
+
+（完整代码：https://github.com/Snailclimb/threadDemo/tree/master/src/wait_notifyHoldLock）
+
+带wait方法的synchronized代码块
+
+	synchronized (lock) {
+		System.out.println("begin wait() ThreadName="
+				+ Thread.currentThread().getName());
+		lock.wait();
+		System.out.println("  end wait() ThreadName="
+				+ Thread.currentThread().getName());
+	}
+
+带notify方法的synchronized代码块
+
+	synchronized (lock) {
+		System.out.println("begin notify() ThreadName="
+				+ Thread.currentThread().getName() + " time="
+				+ System.currentTimeMillis());
+		lock.notify();
+		Thread.sleep(5000);
+		System.out.println("  end notify() ThreadName="
+				+ Thread.currentThread().getName() + " time="
+				+ System.currentTimeMillis());
+	}
+	
+如果有三个同一个对象实例的线程a,b,c,a线程执行带wait方法的synchronized代码块然后bb线程执行带notify方法的synchronized代码块紧接着c执行带notify方法的synchronized代码块。
+
+运行效果如下：	
 
 
 
+这也验证了我们刚开始的结论：必须执行完notify()方法所在的synchronized代码块后才释放。
 
+2.4 当interrupt方法遇到wait方法
+当线程呈wait状态时，对线程对象调用interrupt方法会出现InterrupedException异常。
+
+Service.java
+
+	public class Service {
+		public void testMethod(Object lock) {
+			try {
+				synchronized (lock) {
+					System.out.println("begin wait()");
+					lock.wait();
+					System.out.println("  end wait()");
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				System.out.println("出现异常了，因为呈wait状态的线程被interrupt了！");
+			}
+		}
+	}
+	
+ThreadA.java
+
+	public class ThreadA extends Thread {
+		private Object lock;
+		public ThreadA(Object lock) {
+			super();
+			this.lock = lock;
+		}
+		@Override
+		public void run() {
+			Service service = new Service();
+			service.testMethod(lock);
+		}
+
+	}
+
+Test.java
+
+	public class Test {
+		public static void main(String[] args) {
+			try {
+				Object lock = new Object();
+				ThreadA a = new ThreadA(lock);
+				a.start();
+				Thread.sleep(5000);
+				a.interrupt();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+	
+运行结果：
+	
+
+参考：
+
+《Java多线程编程核心技术》
+
+《Java并发编程的艺术》
+
+如果你觉得博主的文章不错，欢迎转发点赞。你能从中学到知识就是我最大的幸运。
+
+欢迎关注我的微信公众号：“Java面试通关手册”（分享各种Java学习资源，面试题，以及企业级Java实战项目回复关键字免费领取）。另外我创建了一个Java学习交流群（群号：174594747），欢迎大家加入一起学习，这里更有面试，学习视频等资源的分享。
 ————————————————
 版权声明：本文为CSDN博主「SnailClimb在csdn」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/qq_34337272/article/details/79690279
+原文链接：https://blog.csdn.net/qq_34337272/article/details/79690279	
 
 
 
