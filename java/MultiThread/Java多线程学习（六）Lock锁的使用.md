@@ -54,9 +54,11 @@ ReentrantLock类常见方法：
 
 构造方法：
 
-方法名称	描述
-ReentrantLock()	创建一个 ReentrantLock的实例。
-ReentrantLock(boolean fair)	创建一个特定锁类型（公平锁/非公平锁）的ReentrantLock的实例
+| 方法名称        	| 描述    |
+| --------   		| -----:   |
+| ReentrantLock()   | 创建一个 ReentrantLock的实例。|  
+| ReentrantLock(boolean fair)| 创建一个特定锁类型（公平锁/非公平锁）的ReentrantLock的实例      | 
+
 ReentrantLock类常见方法(Lock接口已有方法这里没加上)：
 
 方法名称	描述
