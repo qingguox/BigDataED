@@ -285,6 +285,13 @@ Test.java
 	
 运行结果：
 	
+	wait begin 
+	java.lang.InterruptedException
+		at java.lang.Object.wait(Native Method)
+		at java.lang.Object.wait(Object.java:502)
+		at com.xlg.wait_notify.interrupt.Service.testMethod(Service.java:9)
+		at com.xlg.wait_notify.interrupt.ThreadA.run(ThreadA.java:17)
+	出现异常了，因为呈wait状态的线程被interrupt了！
 
 参考：
 
