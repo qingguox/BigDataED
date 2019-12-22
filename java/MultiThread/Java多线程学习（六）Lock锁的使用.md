@@ -127,12 +127,12 @@ ReentrantLockTest.java
 
 运行结果：
 
-从运行结果可以看出，当一个线程运行完毕后才把锁释放，其他线程才能执行，其他线程的执行顺序是不确定的。
+从运行结果可以看出，**当一个线程运行完毕后才把锁释放**，**其他线程才能执行**，**其他线程的执行顺序是不确定的。**
 
 #### 2.2 Condition接口简介
-我们通过之前的学习知道了：synchronized关键字与wait()和notify/notifyAll()方法相结合可以实现等待/通知机制，ReentrantLock类当然也可以实现，但是需要借助于Condition接口与newCondition() 方法。Condition是JDK1.5之后才有的，它具有很好的灵活性，比如可以实现多路通知功能也就是在一个Lock对象中可以创建多个Condition实例（即对象监视器），线程对象可以注册在指定的Condition中，从而可以有选择性的进行线程通知，在调度线程上更加灵活。
+我们通过之前的学习知道了：**synchronized关键字与wait()和notify/notifyAll()方法相结合可以实现等待/通知机制，ReentrantLock类当然也可以实现，但是需要借助于Condition接口与newCondition() 方法**。Condition是JDK1.5之后才有的，它具有很好的灵活性，比如可以实现多路通知功能也就是在**一个Lock对象中可以创建多个Condition实例（即对象监视器），线程对象可以注册在指定的Condition中，从而可以有选择性的进行线程通知，在调度线程上更加灵活。**
 
-在使用notify/notifyAll()方法进行通知时，被通知的线程是有JVM选择的，使用ReentrantLock类结合Condition实例可以实现“选择性通知”，这个功能非常重要，而且是Condition接口默认提供的。
+在使用notify/notifyAll()方法进行通知时，被通知的线程是有JVM选择的，使用ReentrantLock类结合Condition实例可以实现“**选择性通知**”，这个功能非常重要，而且是Condition接口默认提供的。
 
 而synchronized关键字就相当于整个Lock对象中只有一个Condition实例，所有的线程都注册在它一个身上。如果执行notifyAll()方法的话就会通知所有处于等待状态的线程这样会造成很大的效率问题，而Condition实例的signalAll()方法 只会唤醒注册在该Condition实例中的所有等待线程
 
@@ -145,10 +145,7 @@ Condition接口的常见方法：
 | signal()        	| 相当于Object类的notify方法      |
 | signalAll()       | 相当于Object类的notifyAll方法  |
 	
-	
-	
-	
-	
+
 #### 2.3 使用Condition实现等待/通知机制
 ##### 1. 使用单个Condition实例实现等待/通知机制：
 
@@ -206,7 +203,7 @@ UseSingleConditionWaitNotify.java
 
 运行结果：
 
-在使用wait/notify实现等待通知机制的时候我们知道必须执行完notify()方法所在的synchronized代码块后才释放锁。在这里也差不多，必须执行完signal所在的try语句块之后才释放锁，condition.await()后的语句才能被执行。
+** 在使用wait/notify实现等待通知机制的时候我们知道必须执行完notify()方法所在的synchronized代码块后才释放锁。在这里也差不多，必须执行完signal所在的try语句块之后才释放锁，condition.await()后的语句才能被执行。**
 
 注意： 必须在condition.await()方法调用之前调用lock.lock()代码获得同步监视器，不然会报错。
 
@@ -482,7 +479,7 @@ FairorNofairLock.java
 #### 3.1 简介
 我们刚刚接触到的ReentrantLock（排他锁）具有完全互斥排他的效果，即同一时刻只允许一个线程访问，这样做虽然虽然保证了实例变量的线程安全性，但效率非常低下。ReadWriteLock接口的实现类-ReentrantReadWriteLock读写锁就是为了解决这个问题。
 
-读写锁维护了两个锁，一个是读操作相关的锁也成为共享锁，一个是写操作相关的锁 也称为排他锁。通过分离读锁和写锁，其并发性比一般排他锁有了很大提升。
+** 读写锁维护了两个锁，一个是读操作相关的锁也成为共享锁，一个是写操作相关的锁 也称为排他锁。通过分离读锁和写锁，其并发性比一般排他锁有了很大提升。**
 
 多个读锁之间不互斥，读锁与写锁互斥，写锁与写锁互斥（只要出现写操作的过程就是互斥的。）。在没有线程Thread进行写入操作时，进行读取操作的多个Thread都可以获取读锁，而进行写入操作的Thread只有在获取写锁后才能进行写入操作。即多个Thread可以同时进行读取操作，但是同一时刻只允许一个Thread进行写入操作。
 
@@ -495,10 +492,7 @@ FairorNofairLock.java
 | 重进入      | 该锁支持重进入，以读写线程为例：读线程在获取了读锁之后，能够再次获取读锁。而写线程在获取了写锁之后能够再次获取写锁也能够同时获取读锁。|
 | 锁降级      | 遵循获取写锁、获取读锁再释放写锁的次序，写锁能够降级称为读锁 。|
 
-		
 	
-		
-		
 ##### ReentrantReadWriteLock常见方法：
 构造方法：
 
