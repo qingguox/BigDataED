@@ -146,9 +146,8 @@ synchronized关键字可以将任何一个Object对象作为同步对象来看�
 	
 2.2线程的基本状态
 上面几章的学习中我们已经掌握了与线程有关的大部分API，这些API可以改变线程对象的状态。如下图所示：	
-	
-	
-	
+
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%9B%BE.jpg)
 	
 1. 新建(new)：新创建了一个线程对象。
 2. 可运行(runnable)：线程对象创建后，其他线程(比如main线程）调用了该对象的start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获 取cpu的使用权。
