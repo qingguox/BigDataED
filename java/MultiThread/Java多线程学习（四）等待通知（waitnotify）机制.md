@@ -1,10 +1,12 @@
 转载请备注地址：https://blog.csdn.net/qq_34337272/article/details/79690279
 
+### Java多线程学习（四）等待通知（waitnotify）机制
+
 本节思维导图：
 ![本节思维导图](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9B%9B%20%E7%AD%89%E5%BE%85_%E9%80%9A%E7%9F%A5wait_notify%E6%9C%BA%E5%88%B6.jpg)
 
-一 等待/通知机制介绍
-1.1 不使用等待/通知机制
+#### 一 等待/通知机制介绍
+##### 1.1 不使用等待/通知机制
 当两个线程之间存在生产和消费者关系，也就是说第一个线程（生产者）做相应的操作然后第二个线程（消费者）感知到了变化又进行相应的操作。比如像下面的whie语句一样，假设这个value值就是第一个线程操作的结果，doSomething()是第二个线程要做的事，当满足条件value=desire后才执行doSomething()。
 
 但是这里有个问题就是：第二个语句不停过通过轮询机制来检测判断条件是否成立。如果轮询时间的间隔太小会浪费CPU资源，轮询时间的间隔太大，就可能取不到自己想要的数据。所以这里就需要我们今天讲到的等待/通知（wait/notify）机制来解决这两个矛盾。
@@ -13,7 +15,7 @@
         doSomething();
     }
 
-1.2 什么是等待/通知机制？
+##### 1.2 什么是等待/通知机制？
 通俗来讲：
 
 	等待/通知机制在我们生活中比比皆是，一个形象的例子就是厨师和服务员之间就存在等待/通知机制。
@@ -26,7 +28,7 @@
 
 等待/通知机制，是指一个线程A调用了对象O的wait()方法进入等待状态，而另一个线程B调用了对象O的notify()/notifyAll()方法，线程A收到通知后退出等待队列，进入可运行状态，进而执行后续操作。上诉两个线程通过对象O来完成交互，而对象上的wait()方法和notify()/notifyAll()方法的关系就如同开关信号一样，用来完成等待方和通知方之间的交互工作。
 
-1.3 等待/通知机制的相关方法
+##### 1.3 等待/通知机制的相关方法
 
 
 	方法名称			描述
@@ -38,8 +40,8 @@
 	wait(long)		超时等待一段时间，这里的参数时间是毫秒，也就是等待长达n毫秒，如果没有通知就超时返回
 	wait(long，int)	对于超时时间更细力度的控制，可以达到纳秒
 
-二 等待/通知机制的实现
-2.1 我的第一个等待/通知机制程序
+#### 二 等待/通知机制的实现
+##### 2.1 我的第一个等待/通知机制程序
 MyList.java
 
 	public class MyList {
@@ -156,7 +158,7 @@ synchronized关键字可以将任何一个Object对象作为同步对象来看�
 		doSomething();
 	}
 	
-2.2线程的基本状态
+##### 2.2线程的基本状态
 上面几章的学习中我们已经掌握了与线程有关的大部分API，这些API可以改变线程对象的状态。如下图所示：	
 
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%9B%BE.jpg)
@@ -165,14 +167,10 @@ synchronized关键字可以将任何一个Object对象作为同步对象来看�
 2. 可运行(runnable)：线程对象创建后，其他线程(比如main线程）调用了该对象的start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获 取cpu的使用权。
 3. 运行(running)：可运行状态(runnable)的线程获得了cpu时间片（timeslice），执行程序代码。
 4. 阻塞(block)：阻塞状态是指线程因为某种原因放弃了cpu使用权，也即让出了cpu timeslice，暂时停止运行。直到线程进入可运行(runnable)状态，才有 机会再次获得cpu timeslice转到运行(running)状态。阻塞的情况分三种：
-
-(一). 等待阻塞：运行(running)的线程执行o.wait()方法，JVM会把该线程放 入等待队列(waitting queue)中
-
-
-(二). **同步阻塞**：运行(running)的线程在获取对象的同步锁时，若该同步锁 被别的线程占用，则JVM会把该线程放入锁池(lock pool)中。
-
-(三). **其他阻塞**: 运行(running)的线程执行Thread.sleep(long ms)或t.join()方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入可运行(runnable)状态。
-
+	(一). 等待阻塞：运行(running)的线程执行o.wait()方法，JVM会把该线程放 入等待队列(waitting queue)中
+	(二). **同步阻塞**：运行(running)的线程在获取对象的同步锁时，若该同步锁 被别的线程占用，则JVM会把该线程放入锁池(lock pool)中。
+	(三). **其他阻塞**: 运行(running)的线程执行Thread.sleep(long ms)或t.join()方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。
+	当sleep()状态超时join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入可运行(runnable)状态。
 5. 死亡(dead)：线程run()、main()方法执行结束，或者因异常退出了run()方法，则该线程结束生命周期。死亡的线程不可再次复生。
 
 备注：
@@ -192,7 +190,7 @@ synchronized关键字可以将任何一个Object对象作为同步对象来看�
 
 到达目的地：Dead
 
-2.3 notify()锁不释放
+##### 2.3 notify()锁不释放
 当方法wait()被执行后，锁自动被释放，但执行完notify()方法后，锁不会自动释放。必须执行完notify()方法所在的synchronized代码块后才释放。
 
 下面我们通过代码验证一下：
@@ -230,7 +228,7 @@ synchronized关键字可以将任何一个Object对象作为同步对象来看�
 
 这也验证了我们刚开始的结论：必须执行完notify()方法所在的synchronized代码块后才释放。
 
-2.4 当interrupt方法遇到wait方法
+##### 2.4 当interrupt方法遇到wait方法
 当线程呈wait状态时，对线程对象调用interrupt方法会出现InterrupedException异常。
 
 Service.java
