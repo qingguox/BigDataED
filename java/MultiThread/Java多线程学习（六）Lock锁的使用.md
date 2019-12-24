@@ -69,7 +69,7 @@ ReentrantLock类常见方法(Lock接口已有方法这里没加上)：
 | protected Thread getOwner()        | 返回当前拥有此锁的线程，如果不拥有，则返回 null     |
 | protected Collection getQueuedThreads()        | 返回包含可能正在等待获取此锁的线程的集合。 |
 | int getQueueLength()        | 返回等待获取此锁的线程数的估计。   |
-| protected Collection getWaitingThreads(Condition condition)	  | 返回包含可能在与此锁相关联的给定条件下等待的线程的集合。      |
+| protected Collection getWaitingThreads(Condition condition)	  | 返回包含可能在与此锁相关联的给定条件下等待的线程的集合。|
 | int getWaitQueueLength(Condition condition)        | 返回与此锁相关联的给定条件等待的线程数的估计。 |
 | boolean hasQueuedThread(Thread thread)        | 查询给定线程是否等待获取此锁。     |
 | boolean hasQueuedThreads()        | 查询是否有线程正在等待获取此锁。      |
@@ -126,6 +126,33 @@ ReentrantLockTest.java
 	}
 
 运行结果：
+
+	Thread Name=Thread-0    1
+	Thread Name=Thread-0    2
+	Thread Name=Thread-0    3
+	Thread Name=Thread-0    4
+	Thread Name=Thread-0    5
+	Thread Name=Thread-3    1
+	Thread Name=Thread-3    2
+	Thread Name=Thread-3    3
+	Thread Name=Thread-3    4
+	Thread Name=Thread-3    5
+	Thread Name=Thread-1    1
+	Thread Name=Thread-1    2
+	Thread Name=Thread-1    3
+	Thread Name=Thread-1    4
+	Thread Name=Thread-1    5
+	Thread Name=Thread-2    1
+	Thread Name=Thread-2    2
+	Thread Name=Thread-2    3
+	Thread Name=Thread-2    4
+	Thread Name=Thread-2    5
+	Thread Name=Thread-4    1
+	Thread Name=Thread-4    2
+	Thread Name=Thread-4    3
+	Thread Name=Thread-4    4
+	Thread Name=Thread-4    5
+
 
 从运行结果可以看出，**当一个线程运行完毕后才把锁释放**，**其他线程才能执行**，**其他线程的执行顺序是不确定的。**
 
@@ -202,6 +229,11 @@ UseSingleConditionWaitNotify.java
 	}
 
 运行结果：
+
+	await 的时间为: 1577199126479
+	signal的时间为  1577199129479
+	这是condition.signal() 方法之后的语句。
+	这是condition.await（）方法之后的语句，condition.signal()方法之后我才被执行。
 
 ** 在使用wait/notify实现等待通知机制的时候我们知道必须执行完notify()方法所在的synchronized代码块后才释放锁。在这里也差不多，必须执行完signal所在的try语句块之后才释放锁，condition.await()后的语句才能被执行。** 
 
@@ -313,6 +345,14 @@ MyserviceMoreCondition.java
 
 运行结果：
 
+	begin awaitA时间为1577199174624 ThreadName=A
+	begin awaitB时间为1577199174654 ThreadName=B
+  signalAll_A时间为1577199177665 ThreadName=main
+  end awaitA时间为1577199177665 ThreadName=A
+  
+  
+  。。程序并未结束 ，，因为红色。。 因为没有调用condition.signalAll_B 方法
+
 
 只有A线程被唤醒了。
 
@@ -411,6 +451,37 @@ ConditionSeqExec.java
 
 运行结果：
 
+	Thread A 1
+	Thread A 2
+	Thread A 3
+	Thread B 1
+	Thread B 2
+	Thread B 3
+	Thread C 1
+	Thread C 2
+	Thread C 3
+	Thread A 1
+	Thread A 2
+	Thread A 3
+	Thread B 1
+	Thread B 2
+	Thread B 3
+	Thread C 1
+	Thread C 2
+	Thread C 3
+	Thread A 1
+	Thread A 2
+	Thread A 3
+	Thread B 1
+	Thread B 2
+	Thread B 3
+	Thread C 1
+	Thread C 2
+	Thread C 3
+	Thread A 1
+	Thread A 2
+	Thread A 3
+
 通过代码很好理解，说简单就是在一个线程运行完之后通过condition.signal()/condition.signalAll()方法通知下一个特定的运行运行，就这样循环往复即可。
 
 注意： 默认情况下ReentranLock类使用的是非公平锁
@@ -467,11 +538,54 @@ FairorNofairLock.java
 
 运行结果：
 
+	@@ 线程 Thread-1运行了 。
+	@@ 线程 Thread-3运行了 。
+	@@ 线程 Thread-4运行了 。
+	@@ 线程 Thread-0运行了 。
+	@@ 线程 Thread-5运行了 。
+	@@ 线程 Thread-7运行了 。
+	Thread Nmae= Thread-1 获得锁定。
+	@@ 线程 Thread-2运行了 。
+	@@ 线程 Thread-8运行了 。
+	@@ 线程 Thread-6运行了 。
+	Thread Nmae= Thread-3 获得锁定。
+	Thread Nmae= Thread-4 获得锁定。
+	@@ 线程 Thread-9运行了 。
+	Thread Nmae= Thread-0 获得锁定。
+	Thread Nmae= Thread-5 获得锁定。
+	Thread Nmae= Thread-7 获得锁定。
+	Thread Nmae= Thread-2 获得锁定。
+	Thread Nmae= Thread-8 获得锁定。
+	Thread Nmae= Thread-6 获得锁定。
+	Thread Nmae= Thread-9 获得锁定。
+
+
 公平锁的运行结果是有序的。
 
 把Service的参数修改为false则为非公平锁
 
 	final Service service = new Service(false);//true为公平锁，false为非公平锁
+	
+	@@ 线程 Thread-1运行了 。
+	@@ 线程 Thread-7运行了 。
+	Thread Nmae= Thread-1 获得锁定。
+	@@ 线程 Thread-4运行了 。
+	@@ 线程 Thread-0运行了 。
+	@@ 线程 Thread-3运行了 。
+	@@ 线程 Thread-2运行了 。
+	Thread Nmae= Thread-4 获得锁定。
+	@@ 线程 Thread-8运行了 。
+	Thread Nmae= Thread-8 获得锁定。
+	Thread Nmae= Thread-7 获得锁定。
+	@@ 线程 Thread-5运行了 。
+	Thread Nmae= Thread-0 获得锁定。
+	Thread Nmae= Thread-3 获得锁定。
+	Thread Nmae= Thread-2 获得锁定。
+	Thread Nmae= Thread-5 获得锁定。
+	@@ 线程 Thread-6运行了 。
+	Thread Nmae= Thread-6 获得锁定。
+	@@ 线程 Thread-9运行了 。
+	Thread Nmae= Thread-9 获得锁定。
 
 非公平锁的运行结果是无序的。
 
