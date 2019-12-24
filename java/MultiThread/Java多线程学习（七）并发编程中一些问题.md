@@ -20,6 +20,7 @@ Linux相比与其他操作系统（包括其他类 Unix 系统）有很多的优
 
 ### 减少上下文切换
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2.jpg)
 这是《Java并发编程的艺术》的作者方腾飞大佬吗？？？？
 
 上下文切换又分为2种：让步式上下文切换和抢占式上下文切换。前者是指执行线程主动释放CPU，与锁竞争严重程度成正比，可通过减少锁竞争和使用CAS算法来避免；后者是指线程因分配的时间片用尽而被迫放弃CPU或者被其他优先级更高的线程所抢占，一般由于线程数大于CPU可用核心数引起，可通过适当减少线程数和使用协程来避免。
@@ -40,7 +41,7 @@ CAS（比较与交换，Compare and swap） 是一种有名的无锁算法。无
 
 ### 协程
 
-![Image text]()
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%8D%8F%E7%A8%8B.jpg)
 协程也可以说是微线程或者说是轻量级的线程，它占用的内存更少并且更灵活。很多编程语言中都有协程。Lua, Ruby 等等都有自己的协程实现。Go完全就是因为协程而发展壮大的。维基百科上面并没有Java实现协程的方式，但是不代表Java不能实现协程。比如可以使用Java实现的开源协程库：Quasar。Quasar官网：http://www.paralleluniverse.co/quasar/，。这个库实现了一种可以和Go语言中的Goroutine相对标的编程概念：Fiber。Fiber是一种真正的协程。
 
 
