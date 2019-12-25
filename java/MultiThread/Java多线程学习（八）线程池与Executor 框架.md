@@ -72,14 +72,15 @@ Future接口以及Future接口的实现类FutureTask类。
 #### 2.3 Executor 框架的使用示意图
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/Executor%20%E6%A1%86%E6%9E%B6%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg)
 
-1.** 主线程首先要创建实现Runnable或者Callable接口的任务对象。** 
+1. ** 主线程首先要创建实现Runnable或者Callable接口的任务对象。** 
 备注： 工具类Executors可以实现Runnable对象和Callable对象之间的相互转换。（Executors.callable（Runnable task）或Executors.callable（Runnable task，Object resule））。
 
-2.** 然后可以把创建完成的Runnable对象直接交给ExecutorService执行** （ExecutorService.execute（Runnable command））；或者也可以把Runnable对象或Callable对象提交给ExecutorService执行（ExecutorService.submit（Runnable task）或ExecutorService.submit（Callable task））。
+2. ** 然后可以把创建完成的Runnable对象直接交给ExecutorService执行** （ExecutorService.execute（Runnable command））；或者也可以把Runnable对象或Callable对象提交给ExecutorService执行（ExecutorService.submit（Runnable task）或ExecutorService.submit（Callable task））。
 
-执行execute()方法和submit()方法的区别是什么呢？
-1)execute()方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；
-2)submit()方法用于提交需要返回值的任务。线程池会返回一个future类型的对象，通过这个future对象可以判断任务是否执行成功，并且可以通过future的get()方法来获取返回值，get()方法会阻塞当前线程直到任务完成，而使用get（long timeout，TimeUnit unit）方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。
+	执行execute()方法和submit()方法的区别是什么呢？
+	1)execute()方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；
+	2)submit()方法用于提交需要返回值的任务。线程池会返回一个future类型的对象，通过这个future对象可以判断任务是否执行成功，
+		并且可以通过future的get()方法来获取返回值，get()方法会阻塞当前线程直到任务完成，而使用get（long timeout，TimeUnit unit）方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。
 
 3. **如果执行ExecutorService.submit（…），ExecutorService将返回一个实现Future接口的对象** （我们刚刚也提到过了执行execute()方法和submit()方法的区别，到目前为止的JDK中，返回的是FutureTask对象）。由于FutureTask实现了Runnable，程序员也可以创建FutureTask，然后直接交给ExecutorService执行。
 
