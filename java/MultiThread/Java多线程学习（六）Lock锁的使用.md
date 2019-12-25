@@ -641,6 +641,9 @@ FairorNofairLock.java
             e.printStackTrace();
         }
     }
+	
+	获得读锁 A 1577238098719
+	获得读锁 B 1577238098720		
 ##### 2. 写写互斥
 
 把上面的代码的
@@ -652,6 +655,9 @@ FairorNofairLock.java
 	lock.writeLock().lock();
 
 两个线程同时运行read方法，你会发现同一时间只允许一个线程执行lock()方法后面的代码
+	
+	获得写锁 A 1577238141038
+	获得写锁 B 1577238151038
 
 ##### 3. 读写互斥
 
@@ -699,6 +705,10 @@ FairorNofairLock.java
 	ThreadB b = new ThreadB(service);
 	b.setName("B");
 	b.start();
+	
+	获得读锁 A 1577237980193           10秒之后才输出下面
+	获得写锁 B 1577237990193
+
 
 运行两个使用同一个Service对象实例的线程a,b，线程a执行上面的read方法，线程b执行上面的write方法。你会发现同一时间只允许一个线程执行lock()方法后面的代码。记住：只要出现写操作的过程就是互斥的。
 
