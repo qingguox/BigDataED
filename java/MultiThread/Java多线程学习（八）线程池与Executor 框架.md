@@ -8,21 +8,21 @@
 
 ![](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%85%AB%20%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%8EExecutor%E6%A1%86%E6%9E%B6.jpg)
 
-一 使用线程池的好处
+### 一 使用线程池的好处
 线程池提供了一种限制和管理资源（包括执行一个任务）。 每个线程池还维护一些基本统计信息，例如已完成任务的数量。
 这里借用《Java并发编程的艺术》提到的来说一下使用线程池的好处：
 
 降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。
 提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。
 提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。
-##二 Executor 框架
+### 二 Executor 框架
 
-2.1 简介
+#### 2.1 简介
 Executor 框架是Java5之后引进的，在Java 5之后，通过 Executor 来启动线程比使用 Thread 的 start 方法更好，除了更易管理，效率更好（用线程池实现，节约开销）外，还有关键的一点：有助于避免 this 逃逸问题。
 
 补充：this逃逸是指在构造函数返回之前其他线程就持有该对象的引用. 调用尚未构造完全的对象的方法可能引发令人疑惑的错误。
 
-2.2 Executor 框架结构(主要由三大部分组成)
+#### 2.2 Executor 框架结构(主要由三大部分组成)
 1 任务。
 执行任务需要实现的Runnable接口或Callable接口。
 Runnable接口或Callable接口实现类都可以被ThreadPoolExecutor或ScheduledThreadPoolExecutor执行。
@@ -69,7 +69,7 @@ Future接口以及Future接口的实现类FutureTask类。
         return new FutureTask<T>(runnable, value);
     }
 
-2.3 Executor 框架的使用示意图
+#### 2.3 Executor 框架的使用示意图
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/Executor%20%E6%A1%86%E6%9E%B6%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg)
 
 1.** 主线程首先要创建实现Runnable或者Callable接口的任务对象。** 
@@ -85,13 +85,13 @@ Future接口以及Future接口的实现类FutureTask类。
 
 4. **最后，主线程可以执行FutureTask.get()方法来等待任务执行完成。主线程也可以执行FutureTask.cancel（boolean mayInterruptIfRunning）来取消此任务的执行。** 
 
-三 ThreadPoolExecutor详解
+### 三 ThreadPoolExecutor详解
 线程池实现类ThreadPoolExecutor是Executor 框架最核心的类，先来看一下这个类中比较重要的四个属性
 
-3.1 ThreadPoolExecutor类的四个比较重要的属性
+#### 3.1 ThreadPoolExecutor类的四个比较重要的属性
 
-
-3.2 ThreadPoolExecutor类中提供的四个构造方法
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/ThreadPoolExecutor.jpg)
+#### 3.2 ThreadPoolExecutor类中提供的四个构造方法
 我们看最长的那个，其余三个都是在这个构造方法的基础上产生（给定某些默认参数的构造方法）
 
     /**
@@ -133,7 +133,7 @@ Future接口以及Future接口的实现类FutureTask类。
         this.handler = handler;
     }
 
-3.3 如何创建ThreadPoolExecutor
+#### 3.3 如何创建ThreadPoolExecutor
 在《阿里巴巴Java开发手册》“并发处理”这一章节，明确指出线程资源必须通过线程池提供，不允许在应用中自行显示创建线程。
 
 为什么呢？
@@ -148,6 +148,7 @@ FixedThreadPool 和 SingleThreadExecutor ： 允许请求的队列长度为 Inte
 CachedThreadPool 和 ScheduledThreadPool ： 允许创建的线程数量为 Integer.MAX_VALUE ，可能会创建大量线程，从而导致OOM。
 方式一：通过构造方法实现
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/ThreadPoolExecutor%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95.jpg)
 
 方式二：通过Executor 框架的工具类Executors来实现
 我们可以创建三种类型的ThreadPoolExecutor：
@@ -158,9 +159,9 @@ CachedThreadPool 和 ScheduledThreadPool ： 允许创建的线程数量为 Inte
 
 对应Executors工具类中的方法如图所示：
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/Executors.jpg)
 
-
-3.4 FixedThreadPool详解
+#### 3.4 FixedThreadPool详解
 FixedThreadPool被称为可重用固定线程数的线程池。通过Executors类中的相关源代码来看一下相关实现：
 
    /**
@@ -194,7 +195,7 @@ FixedThreadPool被称为可重用固定线程数的线程池。通过Executors�
 从上面源代码可以看出新创建的FixedThreadPool的corePoolSize和maximumPoolSize都被设置为nThreads。
 FixedThreadPool的execute()方法运行示意图（该图片来源：《Java并发编程的艺术》）
 
-
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/FixedThreadPool%E7%9A%84execute%E6%96%B9%E6%B3%95.jpg)
 上图说明：
 
 	1. 如果当前运行的线程数小于corePoolSize，则创建新的线程来执行任务；
@@ -208,7 +209,7 @@ FixedThreadPool使用无界队列 LinkedBlockingQueue（队列的容量为Intger
 	3. 由于1和2，使用无界队列时keepAliveTime将是一个无效参数；
 	4. 运行中的FixedThreadPool（未执行shutdown()或shutdownNow()方法）不会拒绝任务
 
-3.5 SingleThreadExecutor详解
+#### 3.5 SingleThreadExecutor详解
 SingleThreadExecutor是使用单个worker线程的Executor。下面看看SingleThreadExecutor的实现
 
 	  /**
@@ -239,6 +240,7 @@ SingleThreadExecutor是使用单个worker线程的Executor。下面看看SingleT
 
 ** SingleThreadExecutor的运行示意图（该图片来源：《Java并发编程的艺术》）：** 
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/SingleThreadExecutor%E8%BF%90%E8%A1%8C%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg)
 
 上图说明;
 
@@ -246,7 +248,7 @@ SingleThreadExecutor是使用单个worker线程的Executor。下面看看SingleT
 	2. 当前线程池中有一个运行的线程后，将任务加入LinkedBlockingQueue
 	3. 线程执行完1中的任务后，会在循环中反复从LinkedBlockingQueue中获取任务来执行；
 	
-3.6 CachedThreadPool详解
+#### 3.6 CachedThreadPool详解
 CachedThreadPool是一个会根据需要创建新线程的线程池。下面通过源码来看看 CachedThreadPool的实现：
 
     /**
@@ -272,7 +274,7 @@ CachedThreadPool是一个会根据需要创建新线程的线程池。下面通�
 CachedThreadPool的corePoolSize被设置为空（0），maximumPoolSize被设置为Integer.MAX.VALUE，即它是无界的，这也就意味着如果主线程提交任务的速度高于maximumPool中线程处理任务的速度时，CachedThreadPool会不断创建新的线程。极端情况下，这样会导致耗尽cpu和内存资源。
 
 ** CachedThreadPool的execute()方法的执行示意图（该图片来源：《Java并发编程的艺术》）**  
-
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/CachedThreadPool%E7%9A%84execute%E6%96%B9%E6%B3%95.jpg)
 
 **上图说明：** 
 
@@ -281,8 +283,8 @@ CachedThreadPool的corePoolSize被设置为空（0），maximumPoolSize被设置
 	2. 当初始maximumPool为空，或者maximumPool中没有空闲线程时，将没有线程执行SynchronousQueue.poll(keepAliveTime,TimeUnit.NANOSECONDS)。
 		这种情况下，步骤1将失败，此时CachedThreadPool会创建新线程执行任务，execute方法执行完成；
 
-3.7 ThreadPoolExecutor使用示例
-3.7.1 示例代码
+#### 3.7 ThreadPoolExecutor使用示例
+##### 3.7.1 示例代码
 首先创建一个Runnable接口的实现类（当然也可以是Callable接口，我们上面也说了两者的区别是：Runnable接口不会返回结果但是Callable接口可以返回结果。后面介绍Executors类的一些方法的时候会介绍到两者的相互转换。）
 
 	import java.util.Date;
@@ -367,16 +369,16 @@ CachedThreadPool的corePoolSize被设置为空（0），maximumPoolSize被设置
 	pool-1-thread-4 End. Time = Thu May 31 10:23:02 CST 2018
 	Finished all threads
 
-3.7.2 shutdown（）VS shutdownNow（）
+3##### .7.2 shutdown（）VS shutdownNow（）
 shutdown（）方法表明关闭已在Executor上调用，因此不会再向DelayedPool添加任何其他任务（由ScheduledThreadPoolExecutor类在内部使用）。 但是，已经在队列中提交的任务将被允许完成。
 另一方面，shutdownNow（）方法试图终止当前正在运行的任务，并停止处理排队的任务并返回正在等待执行的List。
 
-3.7.3 isTerminated() Vs isShutdown()
+##### 3.7.3 isTerminated() Vs isShutdown()
 isShutdown（）表示执行程序正在关闭，但并非所有任务都已完成执行。
 另一方面，isShutdown（）表示所有线程都已完成执行。
 
 ### 四 ScheduledThreadPoolExecutor详解
-4.1 简介
+#### 4.1 简介
 ** ScheduledThreadPoolExecutor主要用来在给定的延迟后运行任务，或者定期执行任务。** 
 
 ** ScheduledThreadPoolExecutor使用的任务队列DelayQueue封装了一个PriorityQueue，PriorityQueue会对队列中的任务进行排序，执行所需时间短的放在前面先被执行(ScheduledFutureTask的time变量小的先执行)，如果执行所需时间相同则先提交的任务将被先执行(ScheduledFutureTask的squenceNumber变量小的先执行)。**  
@@ -392,8 +394,9 @@ isShutdown（）表示执行程序正在关闭，但并非所有任务都已完�
 > ***备注***  ： Quartz是一个由java编写的任务调度库，由OpenSymphony组织开源出来。在实际项目开发中使用Quartz的还是居多，比较推荐使用Quartz。因为Quartz理论上能够同时对上万个任务进行调度，拥有丰富的功能特性，包括任务调度、任务持久化、可集群化、插件等等。
 
 
-4.2 ScheduledThreadPoolExecutor运行机制
+#### 4.2 ScheduledThreadPoolExecutor运行机制
 
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/ScheduledThreadPoolExecutor%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.jpg)
 ** ScheduledThreadPoolExecutor的执行主要分为两大部分：** 
 
 1. 当调用ScheduledThreadPoolExecutor的 scheduleAtFixedRate() 方法或者scheduleWirhFixedDelay() 方法时，会向ScheduledThreadPoolExecutor的 DelayQueue 添加一个实现了 RunnableScheduledFutur 接口的 ScheduledFutureTask 。
@@ -404,15 +407,15 @@ isShutdown（）表示执行程序正在关闭，但并非所有任务都已完�
 * 获取任务的方不同
 * 执行周期任务后，增加了额外的处理
 
-4.3 ScheduledThreadPoolExecutor执行周期任务的步骤
+#### 4.3 ScheduledThreadPoolExecutor执行周期任务的步骤
 
-
+![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/ScheduledThreadPoolExecutor执行周期任务的步骤.jpg)
 1. 线程1从DelayQueue中获取已到期的ScheduledFutureTask（DelayQueue.take()）。到期任务是指ScheduledFutureTask的time大于等于当前系统的时间；
 2. 线程1执行这个ScheduledFutureTask；
 3. 线程1修改ScheduledFutureTask的time变量为下次将要被执行的时间；
 4. 线程1把这个修改time之后的ScheduledFutureTask放回DelayQueue中（DelayQueue.add())。
 
-4.4 ScheduledThreadPoolExecutor使用示例
+#### 4.4 ScheduledThreadPoolExecutor使用示例
 
 1. 创建一个简单的实现Runnable接口的类（我们上面的例子已经实现过）
 2. 测试程序使用ScheduledExecutorService和ScheduledThreadPoolExecutor实现的java调度。
@@ -460,7 +463,7 @@ isShutdown（）表示执行程序正在关闭，但并非所有任务都已完�
 	Current Time = Wed May 30 17:11:49 CST 2018
 	Finished all threads
 
-4.4.1 ScheduledExecutorService scheduleAtFixedRate(Runnable command,long initialDelay,long period,TimeUnit unit)方法
+##### 4.4.1 ScheduledExecutorService scheduleAtFixedRate(Runnable command,long initialDelay,long period,TimeUnit unit)方法
 我们可以使用ScheduledExecutorService scheduleAtFixedRate方法来安排任务在初始延迟后运行，然后在给定的时间段内运行。
 
 时间段是从池中第一个线程的开始，因此如果您将period指定为1秒并且线程运行5秒，那么只要第一个工作线程完成执行，下一个线程就会开始执行
@@ -503,7 +506,7 @@ isShutdown（）表示执行程序正在关闭，但并非所有任务都已完�
 
 	Process finished with exit code 0
 
-4.4.2 ScheduledExecutorService scheduleWithFixedDelay(Runnable command,long initialDelay,long delay,TimeUnit unit)方法
+##### 4.4.2 ScheduledExecutorService scheduleWithFixedDelay(Runnable command,long initialDelay,long delay,TimeUnit unit)方法
 ScheduledExecutorService scheduleWithFixedDelay方法可用于以初始延迟启动周期性执行，然后以给定延迟执行。 延迟时间是线程完成执行的时间。
 
 	for (int i = 0; i < 3; i++) {
@@ -553,7 +556,7 @@ ScheduledExecutorService scheduleWithFixedDelay方法可用于以初始延迟启
 	pool-1-thread-2 End. Time = Wed May 30 17:58:46 CST 2018
 	Finished all threads
 
-4.4.3 scheduleWithFixedDelay() vs scheduleAtFixedRate()
+##### 4.4.3 scheduleWithFixedDelay() vs scheduleAtFixedRate()
 scheduleAtFixedRate（…）将延迟视为两个任务开始之间的差异（即定期调用）
 scheduleWithFixedDelay（…）将延迟视为一个任务结束与下一个任务开始之间的差异
 
@@ -579,7 +582,7 @@ scheduleWithFixedDelay（…）将延迟视为一个任务结束与下一个任�
 
 最后，就是这两周要考试了，会抽点时间出来简单应付一下学校考试了。然后，就是写这篇多线程的文章废了好多好多时间。一直不知从何写起。
 
-参考
+### 参考
 《Java并发编程的艺术》
 
 Java Scheduler ScheduledExecutorService ScheduledThreadPoolExecutor Example
