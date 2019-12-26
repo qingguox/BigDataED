@@ -379,7 +379,7 @@ shutdown（）方法表明关闭已在Executor上调用，因此不会再向Dela
 isTerminated（）表示执行程序正在关闭，但并非所有任务都已完成执行。
 另一方面，isShutdown（）表示所有线程都已完成执行。
 而只要执行过shutdown()方法，isShutdown()就为true;
-而当其中任务执行完成的时候，isTerminated()才为true;
+而当其中任务执行完成的时候，isTerminated()才为true; == 调用过 shutdown 并且 所有提交的任务全部完成。
 
 ### 四 ScheduledThreadPoolExecutor详解
 #### 4.1 简介
