@@ -457,15 +457,17 @@ isTerminated（）表示执行程序正在关闭，但并非所有任务都已�
 	
 运行结果：
 
-	Current Time = Wed May 30 17:11:16 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:11:27 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:11:28 CST 2018
-	pool-1-thread-3 Start. Time = Wed May 30 17:11:29 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:11:32 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:11:33 CST 2018
-	pool-1-thread-3 End. Time = Wed May 30 17:11:34 CST 2018
-	Current Time = Wed May 30 17:11:49 CST 2018
-	Finished all threads
+	Current Time = Thu Dec 26 11:37:14 CST 2019
+	pool-1-thread-1 Start Time ..Thu Dec 26 11:37:25 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:37:26 CST 2019
+	pool-1-thread-3 Start Time ..Thu Dec 26 11:37:27 CST 2019
+	pool-1-thread-1 end  Time ..Thu Dec 26 11:37:30 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:37:31 CST 2019
+	pool-1-thread-3 end  Time ..Thu Dec 26 11:37:32 CST 2019
+	Current Time = Thu Dec 26 11:37:47 CST 2019
+	finished all threads 
+
+	先11 秒 相当于把 任务 放进 等待队列中， time设置， 然后 按照运行图进行。
 
 ##### 4.4.1 ScheduledExecutorService scheduleAtFixedRate(Runnable command,long initialDelay,long period,TimeUnit unit)方法
 我们可以使用ScheduledExecutorService scheduleAtFixedRate方法来安排任务在初始延迟后运行，然后在给定的时间段内运行。
