@@ -467,10 +467,10 @@ isTerminated（）表示执行程序正在关闭，但并非所有任务都已�
 	Current Time = Thu Dec 26 11:37:47 CST 2019
 	finished all threads 
 
-	先11 秒 相当于把 任务 放进 等待队列中， time设置， 然后 按照运行图进行。
+	先11 秒 相当于把 任务 放进 等待队列中， time设置， 然后 按照运行图进行。 一次· 
 
 ##### 4.4.1 ScheduledExecutorService scheduleAtFixedRate(Runnable command,long initialDelay,long period,TimeUnit unit)方法
-我们可以使用ScheduledExecutorService scheduleAtFixedRate方法来安排任务在初始延迟后运行，然后在给定的时间段内运行。
+我们可以使用ScheduledExecutorService scheduleAtFixedRate方法来安排任务在初始延迟后运行，然后在给定的时间段内运行。多次
 
 时间段是从池中第一个线程的开始，因此如果您将period指定为1秒并且线程运行5秒，那么只要第一个工作线程完成执行，下一个线程就会开始执行
 
@@ -482,35 +482,34 @@ isTerminated（）表示执行程序正在关闭，但并非所有任务都已�
 		TimeUnit.SECONDS);
 	}
 	
+	执行 多次 是因为 Thread.sleep(30000)  调度程序产生一些线程
 输出示例:
 
-	Current Time = Wed May 30 17:47:09 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:47:10 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:47:11 CST 2018
-	pool-1-thread-3 Start. Time = Wed May 30 17:47:12 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:47:15 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:47:16 CST 2018
-	pool-1-thread-3 End. Time = Wed May 30 17:47:17 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:47:20 CST 2018
-	pool-1-thread-4 Start. Time = Wed May 30 17:47:21 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:47:22 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:47:25 CST 2018
-	pool-1-thread-4 End. Time = Wed May 30 17:47:26 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:47:27 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:47:30 CST 2018
-	pool-1-thread-3 Start. Time = Wed May 30 17:47:31 CST 2018
-	pool-1-thread-5 Start. Time = Wed May 30 17:47:32 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:47:35 CST 2018
-	pool-1-thread-3 End. Time = Wed May 30 17:47:36 CST 2018
-	pool-1-thread-5 End. Time = Wed May 30 17:47:37 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:47:40 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:47:41 CST 2018
-	Current Time = Wed May 30 17:47:42 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:47:45 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:47:46 CST 2018
-	Finished all threads
-
-	Process finished with exit code 0
+	Current Time = Thu Dec 26 11:52:13 CST 2019
+	pool-1-thread-1 Start Time ..Thu Dec 26 11:52:14 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:52:15 CST 2019
+	pool-1-thread-3 Start Time ..Thu Dec 26 11:52:16 CST 2019
+	pool-1-thread-1 end  Time ..Thu Dec 26 11:52:19 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:52:20 CST 2019
+	pool-1-thread-3 end  Time ..Thu Dec 26 11:52:21 CST 2019
+	pool-1-thread-1 Start Time ..Thu Dec 26 11:52:24 CST 2019
+	pool-1-thread-4 Start Time ..Thu Dec 26 11:52:25 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:52:26 CST 2019
+	pool-1-thread-1 end  Time ..Thu Dec 26 11:52:29 CST 2019
+	pool-1-thread-4 end  Time ..Thu Dec 26 11:52:30 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:52:31 CST 2019
+	pool-1-thread-1 Start Time ..Thu Dec 26 11:52:34 CST 2019
+	pool-1-thread-3 Start Time ..Thu Dec 26 11:52:35 CST 2019
+	pool-1-thread-5 Start Time ..Thu Dec 26 11:52:36 CST 2019
+	pool-1-thread-1 end  Time ..Thu Dec 26 11:52:39 CST 2019
+	pool-1-thread-3 end  Time ..Thu Dec 26 11:52:40 CST 2019
+	pool-1-thread-5 end  Time ..Thu Dec 26 11:52:41 CST 2019
+	pool-1-thread-1 Start Time ..Thu Dec 26 11:52:44 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:52:45 CST 2019
+	Current Time = Thu Dec 26 11:52:46 CST 2019
+	pool-1-thread-1 end  Time ..Thu Dec 26 11:52:49 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:52:50 CST 2019
+	finished all threads 
 
 ##### 4.4.2 ScheduledExecutorService scheduleWithFixedDelay(Runnable command,long initialDelay,long delay,TimeUnit unit)方法
 ScheduledExecutorService scheduleWithFixedDelay方法可用于以初始延迟启动周期性执行，然后以给定延迟执行。 延迟时间是线程完成执行的时间。
@@ -524,52 +523,52 @@ ScheduledExecutorService scheduleWithFixedDelay方法可用于以初始延迟启
 
 输出示例：
 
-	Current Time = Wed May 30 17:58:09 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:58:10 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:58:11 CST 2018
-	pool-1-thread-3 Start. Time = Wed May 30 17:58:12 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:58:15 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:58:16 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:58:16 CST 2018
-	pool-1-thread-3 End. Time = Wed May 30 17:58:17 CST 2018
-	pool-1-thread-4 Start. Time = Wed May 30 17:58:17 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:58:18 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:58:21 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:58:22 CST 2018
-	pool-1-thread-4 End. Time = Wed May 30 17:58:22 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:58:23 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:58:23 CST 2018
-	pool-1-thread-4 Start. Time = Wed May 30 17:58:24 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:58:27 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:58:28 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:58:28 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:58:29 CST 2018
-	pool-1-thread-4 End. Time = Wed May 30 17:58:29 CST 2018
-	pool-1-thread-4 Start. Time = Wed May 30 17:58:30 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:58:33 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:58:34 CST 2018
-	pool-1-thread-1 Start. Time = Wed May 30 17:58:34 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:58:35 CST 2018
-	pool-1-thread-4 End. Time = Wed May 30 17:58:35 CST 2018
-	pool-1-thread-4 Start. Time = Wed May 30 17:58:36 CST 2018
-	pool-1-thread-1 End. Time = Wed May 30 17:58:39 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:58:40 CST 2018
-	pool-1-thread-5 Start. Time = Wed May 30 17:58:40 CST 2018
-	pool-1-thread-4 End. Time = Wed May 30 17:58:41 CST 2018
-	pool-1-thread-2 Start. Time = Wed May 30 17:58:41 CST 2018
-	Current Time = Wed May 30 17:58:42 CST 2018
-	pool-1-thread-5 End. Time = Wed May 30 17:58:45 CST 2018
-	pool-1-thread-2 End. Time = Wed May 30 17:58:46 CST 2018
-	Finished all threads
-
+	Current Time = Thu Dec 26 11:57:56 CST 2019
+	pool-1-thread-1 Start Time ..Thu Dec 26 11:57:57 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:57:58 CST 2019
+	pool-1-thread-3 Start Time ..Thu Dec 26 11:57:59 CST 2019
+	pool-1-thread-1 end  Time ..Thu Dec 26 11:58:02 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:58:03 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:58:03 CST 2019
+	pool-1-thread-3 end  Time ..Thu Dec 26 11:58:04 CST 2019
+	pool-1-thread-1 Start Time ..Thu Dec 26 11:58:04 CST 2019
+	pool-1-thread-4 Start Time ..Thu Dec 26 11:58:05 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:58:08 CST 2019
+	pool-1-thread-1 end  Time ..Thu Dec 26 11:58:09 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:58:09 CST 2019
+	pool-1-thread-4 end  Time ..Thu Dec 26 11:58:10 CST 2019
+	pool-1-thread-3 Start Time ..Thu Dec 26 11:58:10 CST 2019
+	pool-1-thread-5 Start Time ..Thu Dec 26 11:58:11 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:58:14 CST 2019
+	pool-1-thread-3 end  Time ..Thu Dec 26 11:58:15 CST 2019
+	pool-1-thread-3 Start Time ..Thu Dec 26 11:58:15 CST 2019
+	pool-1-thread-5 end  Time ..Thu Dec 26 11:58:16 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:58:16 CST 2019
+	pool-1-thread-4 Start Time ..Thu Dec 26 11:58:17 CST 2019
+	pool-1-thread-3 end  Time ..Thu Dec 26 11:58:20 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:58:21 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:58:21 CST 2019
+	pool-1-thread-4 end  Time ..Thu Dec 26 11:58:22 CST 2019
+	pool-1-thread-3 Start Time ..Thu Dec 26 11:58:22 CST 2019
+	pool-1-thread-5 Start Time ..Thu Dec 26 11:58:23 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:58:26 CST 2019
+	pool-1-thread-3 end  Time ..Thu Dec 26 11:58:27 CST 2019
+	pool-1-thread-2 Start Time ..Thu Dec 26 11:58:27 CST 2019
+	pool-1-thread-5 end  Time ..Thu Dec 26 11:58:28 CST 2019
+	pool-1-thread-5 Start Time ..Thu Dec 26 11:58:28 CST 2019
+	Current Time = Thu Dec 26 11:58:29 CST 2019
+	pool-1-thread-2 end  Time ..Thu Dec 26 11:58:32 CST 2019
+	pool-1-thread-5 end  Time ..Thu Dec 26 11:58:33 CST 2019
+	finished all threads 
+	
 ##### 4.4.3 scheduleWithFixedDelay() vs scheduleAtFixedRate()
 scheduleAtFixedRate（…）将延迟视为两个任务开始之间的差异（即定期调用）
 scheduleWithFixedDelay（…）将延迟视为一个任务结束与下一个任务开始之间的差异
 
 
-> ***scheduleAtFixedRate():***  创建并执行在给定的初始延迟之后，随后以给定的时间段首先启用的周期性动作; 那就是执行将在initialDelay之后开始，然后initialDelay+period ，然后是initialDelay + 2 * period ，等等。 如果任务的执行遇到异常，则后续的执行被抑制。 否则，任务将仅通过取消或终止执行人终止。 如果任务执行时间比其周期长，则后续执行可能会迟到，但不会同时执行。
+> ***scheduleAtFixedRate():***  创建并执行在给定的初始延迟之后，随后以给定的时间段首先启用的周期性动作; 那就是执行将在initialDelay之后开始，然后time = initialDelay+period ，然后是initialDelay + 2 * period ，等等。 如果任务的执行遇到异常，则后续的执行被抑制。 否则，任务将仅通过取消或终止执行人终止。 如果任务执行时间比其周期长，则后续执行可能会迟到，但不会同时执行。
 > ***scheduleWithFixedDelay() : ***  创建并执行在给定的初始延迟之后首先启用的定期动作，随后在一个执行的终止和下一个执行的开始之间给定的延迟。 如果任务的执行遇到异常，则后续的执行被抑制。 否则，任务将仅通过取消或终止执行终止。
-
+																time = beforeEndTime + delay;
 
 
 ### 五 各种线程池的适用场景介绍
