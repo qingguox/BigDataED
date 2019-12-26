@@ -15,6 +15,7 @@
 降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。
 提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。
 提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。
+
 ### 二 Executor 框架
 
 #### 2.1 简介
@@ -72,10 +73,10 @@ Future接口以及Future接口的实现类FutureTask类。
 #### 2.3 Executor 框架的使用示意图
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/Executor%20%E6%A1%86%E6%9E%B6%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg)
 
-1. ** 主线程首先要创建实现Runnable或者Callable接口的任务对象。** 
+1. **主线程首先要创建实现Runnable或者Callable接口的任务对象。** 
 备注： 工具类Executors可以实现Runnable对象和Callable对象之间的相互转换。（Executors.callable（Runnable task）或Executors.callable（Runnable task，Object resule））。
 
-2. ** 然后可以把创建完成的Runnable对象直接交给ExecutorService执行** （ExecutorService.execute（Runnable command））；或者也可以把Runnable对象或Callable对象提交给ExecutorService执行（ExecutorService.submit（Runnable task）或ExecutorService.submit（Callable task））。
+2. **然后可以把创建完成的Runnable对象直接交给ExecutorService执行** （ExecutorService.execute（Runnable command））；或者也可以把Runnable对象或Callable对象提交给ExecutorService执行（ExecutorService.submit（Runnable task）或ExecutorService.submit（Callable task））。
 
 	执行execute()方法和submit()方法的区别是什么呢？
 	1)execute()方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；
@@ -239,7 +240,7 @@ SingleThreadExecutor是使用单个worker线程的Executor。下面看看SingleT
 
 从上面源代码可以看出新创建的SingleThreadExecutor的corePoolSize和maximumPoolSize都被设置为1.其他参数和FixedThreadPool相同。SingleThreadExecutor使用无界队列LinkedBlockingQueue作为线程池的工作队列（队列的容量为Intger.MAX_VALUE）。SingleThreadExecutor使用无界队列作为线程池的工作队列会对线程池带来的影响与FixedThreadPool相同。
 
-** SingleThreadExecutor的运行示意图（该图片来源：《Java并发编程的艺术》）：** 
+**SingleThreadExecutor的运行示意图（该图片来源：《Java并发编程的艺术》）：** 
 
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/SingleThreadExecutor%E8%BF%90%E8%A1%8C%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg)
 
@@ -274,7 +275,7 @@ CachedThreadPool是一个会根据需要创建新线程的线程池。下面通�
 
 CachedThreadPool的corePoolSize被设置为空（0），maximumPoolSize被设置为Integer.MAX.VALUE，即它是无界的，这也就意味着如果主线程提交任务的速度高于maximumPool中线程处理任务的速度时，CachedThreadPool会不断创建新的线程。极端情况下，这样会导致耗尽cpu和内存资源。
 
-** CachedThreadPool的execute()方法的执行示意图（该图片来源：《Java并发编程的艺术》）**  
+**CachedThreadPool的execute()方法的执行示意图（该图片来源：《Java并发编程的艺术》）**  
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/CachedThreadPool%E7%9A%84execute%E6%96%B9%E6%B3%95.jpg)
 
 **上图说明：** 
@@ -375,22 +376,22 @@ shutdown（）方法表明关闭已在Executor上调用，因此不会再向Dela
 另一方面，shutdownNow（）方法试图终止当前正在运行的任务，并停止处理排队的任务并返回正在等待执行的List。
 
 ##### 3.7.3 isTerminated() Vs isShutdown()
-isShutdown（）表示执行程序正在关闭，但并非所有任务都已完成执行。
+isTerminated（）表示执行程序正在关闭，但并非所有任务都已完成执行。
 另一方面，isShutdown（）表示所有线程都已完成执行。
 
 ### 四 ScheduledThreadPoolExecutor详解
 #### 4.1 简介
-** ScheduledThreadPoolExecutor主要用来在给定的延迟后运行任务，或者定期执行任务。** 
+**ScheduledThreadPoolExecutor主要用来在给定的延迟后运行任务，或者定期执行任务。** 
 
-** ScheduledThreadPoolExecutor使用的任务队列DelayQueue封装了一个PriorityQueue，PriorityQueue会对队列中的任务进行排序，执行所需时间短的放在前面先被执行(ScheduledFutureTask的time变量小的先执行)，如果执行所需时间相同则先提交的任务将被先执行(ScheduledFutureTask的squenceNumber变量小的先执行)。**  
+**ScheduledThreadPoolExecutor使用的任务队列DelayQueue封装了一个PriorityQueue，PriorityQueue会对队列中的任务进行排序，执行所需时间短的放在前面先被执行(ScheduledFutureTask的time变量小的先执行)，如果执行所需时间相同则先提交的任务将被先执行(ScheduledFutureTask的squenceNumber变量小的先执行)。**  
 
-** ScheduledThreadPoolExecutor和Timer的比较：** 
+**ScheduledThreadPoolExecutor和Timer的比较：** 
 
 1. Timer对系统时钟的变化敏感，ScheduledThreadPoolExecutor不是；
 2. Timer只有一个执行线程，因此长时间运行的任务可以延迟其他任务。 ScheduledThreadPoolExecutor可以配置任意数量的线程。 此外，如果你想（通过提供ThreadFactory），你可以完全控制创建的线程;
 3. 在TimerTask中抛出的运行时异常会杀死一个线程，从而导致Timer死机:-( …即计划任务将不再运行。ScheduledThreadExecutor不仅捕获运行时异常，还允许您在需要时处理它们（通过重写afterExecute方法 ThreadPoolExecutor）。抛出异常的任务将被取消，但其他任务将继续运行。
 
-** 综上，在JDK1.5之后，你没有理由再使用Timer进行任务调度了。** 
+**综上，在JDK1.5之后，你没有理由再使用Timer进行任务调度了。** 
 
 > ***备注***  ： Quartz是一个由java编写的任务调度库，由OpenSymphony组织开源出来。在实际项目开发中使用Quartz的还是居多，比较推荐使用Quartz。因为Quartz理论上能够同时对上万个任务进行调度，拥有丰富的功能特性，包括任务调度、任务持久化、可集群化、插件等等。
 
@@ -398,11 +399,11 @@ isShutdown（）表示执行程序正在关闭，但并非所有任务都已完�
 #### 4.2 ScheduledThreadPoolExecutor运行机制
 
 ![Image text](https://github.com/1367379258/BigDataEd/blob/master/java/photo/ScheduledThreadPoolExecutor%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6.jpg)
-** ScheduledThreadPoolExecutor的执行主要分为两大部分：** 
+**ScheduledThreadPoolExecutor的执行主要分为两大部分：** 
 
 1. 当调用ScheduledThreadPoolExecutor的 scheduleAtFixedRate() 方法或者scheduleWirhFixedDelay() 方法时，会向ScheduledThreadPoolExecutor的 DelayQueue 添加一个实现了 RunnableScheduledFutur 接口的 ScheduledFutureTask 。
 2. 线程池中的线程从DelayQueue中获取ScheduledFutureTask，然后执行任务。
-** ScheduledThreadPoolExecutor为了实现周期性的执行任务，对ThreadPoolExecutor做了如下修改：** 
+**ScheduledThreadPoolExecutor为了实现周期性的执行任务，对ThreadPoolExecutor做了如下修改：** 
 
 * 使用 DelayQueue 作为任务队列；
 * 获取任务的方不同
@@ -562,21 +563,21 @@ scheduleAtFixedRate（…）将延迟视为两个任务开始之间的差异（�
 scheduleWithFixedDelay（…）将延迟视为一个任务结束与下一个任务开始之间的差异
 
 
-> *** scheduleAtFixedRate():***  创建并执行在给定的初始延迟之后，随后以给定的时间段首先启用的周期性动作; 那就是执行将在initialDelay之后开始，然后initialDelay+period ，然后是initialDelay + 2 * period ，等等。 如果任务的执行遇到异常，则后续的执行被抑制。 否则，任务将仅通过取消或终止执行人终止。 如果任务执行时间比其周期长，则后续执行可能会迟到，但不会同时执行。
-> *** scheduleWithFixedDelay() : ***  创建并执行在给定的初始延迟之后首先启用的定期动作，随后在一个执行的终止和下一个执行的开始之间给定的延迟。 如果任务的执行遇到异常，则后续的执行被抑制。 否则，任务将仅通过取消或终止执行终止。
+> ***scheduleAtFixedRate():***  创建并执行在给定的初始延迟之后，随后以给定的时间段首先启用的周期性动作; 那就是执行将在initialDelay之后开始，然后initialDelay+period ，然后是initialDelay + 2 * period ，等等。 如果任务的执行遇到异常，则后续的执行被抑制。 否则，任务将仅通过取消或终止执行人终止。 如果任务执行时间比其周期长，则后续执行可能会迟到，但不会同时执行。
+> ***scheduleWithFixedDelay() : ***  创建并执行在给定的初始延迟之后首先启用的定期动作，随后在一个执行的终止和下一个执行的开始之间给定的延迟。 如果任务的执行遇到异常，则后续的执行被抑制。 否则，任务将仅通过取消或终止执行终止。
 
 
 
 ### 五 各种线程池的适用场景介绍
-** FixedThreadPool： ** 适用于为了满足资源管理需求，而需要限制当前线程数量的应用场景。它适用于负载比较重的服务器；
+**FixedThreadPool： ** 适用于为了满足资源管理需求，而需要限制当前线程数量的应用场景。它适用于负载比较重的服务器；
 
-** SingleThreadExecutor： ** 适用于需要保证顺序地执行各个任务并且在任意时间点，不会有多个线程是活动的应用场景。
+**SingleThreadExecutor： ** 适用于需要保证顺序地执行各个任务并且在任意时间点，不会有多个线程是活动的应用场景。
 
-** CachedThreadPool： ** 适用于执行很多的短期异步任务的小程序，或者是负载较轻的服务器；
+**CachedThreadPool： ** 适用于执行很多的短期异步任务的小程序，或者是负载较轻的服务器；
 
-** ScheduledThreadPoolExecutor： ** 适用于需要多个后台执行周期任务，同时为了满足资源管理需求而需要限制后台线程的数量的应用场景，
+**ScheduledThreadPoolExecutor： ** 适用于需要多个后台执行周期任务，同时为了满足资源管理需求而需要限制后台线程的数量的应用场景，
 
-** SingleThreadScheduledExecutor： ** 适用于需要单个后台线程执行周期任务，同时保证顺序地执行各个任务的应用场景。
+**SingleThreadScheduledExecutor： ** 适用于需要单个后台线程执行周期任务，同时保证顺序地执行各个任务的应用场景。
 
 ### 六 总结
 本节只是简单的介绍了一下使用线程池的好处，然后花了大量篇幅介绍Executor 框架。详细介绍了Executor 框架中ThreadPoolExecutor和ScheduledThreadPoolExecutor，并且通过实例详细讲解了ScheduledThreadPoolExecutor的使用。对于FutureTask 只是粗略带过，因为篇幅问题，并没有深究它的原理，后面的文章会进行补充。这一篇文章只是大概带大家过一下线程池的基本概览，深入讲解的地方不是很多，后续会通过源码深入研究其中比较重要的一些知识点。
