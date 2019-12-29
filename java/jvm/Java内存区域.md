@@ -136,7 +136,7 @@ Java 虚拟机所管理的内存中最大的一块，Java 堆是所有线程共�
 Java 堆是垃圾收集器管理的主要区域，因此也被称作**GC 堆（Garbage Collected Heap）**.从垃圾回收的角度，由于现在收集器基本都采用分代垃圾收集算法，所以 Java 堆还可以细分为：新生代和老年代：再细致一点有：Eden 空间、From Survivor、To Survivor 空间等。**进一步划分的目的是更好地回收内存，或者更快地分配内存。**
 
 <div align="center">  
-<img src="https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-3堆结构.png" width="400px"/>
+<img src="https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%A0%86.jpg" width="400px"/>
 </div>
 
 上图所示的 eden 区、s0 区、s1 区都属于新生代，tentired 区属于老年代。大部分情况，对象都会首先在 Eden 区域分配，在一次新生代垃圾回收后，如果对象还存活，则会进入 s0 或者 s1，并且对象的年龄还会加 1(Eden 区->Survivor 区后对象的初始年龄变为 1)，当它的年龄增加到一定程度（默认为 15 岁），就会被晋升到老年代中。对象晋升到老年代的年龄阈值，可以通过参数 `-XX:MaxTenuringThreshold` 来设置。
@@ -187,7 +187,7 @@ JDK 1.8 的时候，方法区（HotSpot 的永久代）被彻底移除了（JDK1
 
 **JDK1.7 及之后版本的 JVM 已经将运行时常量池从方法区中移了出来，在 Java 堆（Heap）中开辟了一块区域存放运行时常量池。** 
 
-![](http://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-9-14/26038433.jpg)
+![](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%B8%B8%E9%87%8F%E6%B1%A0.jpg)
 ——图片来源：https://blog.csdn.net/wangbiao007/article/details/78545189
 
 
@@ -205,7 +205,7 @@ JDK1.4 中新加入的 **NIO(New Input/Output) 类**，引入了一种基于**�
 
 ### 3.1 对象的创建
 下图便是 Java 对象的创建过程，我建议最好是能默写出来，并且要掌握每一步在做什么。
-![Java创建对象的过程](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/Java创建对象的过程.png)
+![Java创建对象的过程](https://github.com/1367379258/BigDataEd/blob/master/java/photo/java%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.jpg)
 
 #### Step1:类加载检查
 
@@ -220,7 +220,7 @@ JDK1.4 中新加入的 **NIO(New Input/Output) 类**，引入了一种基于**�
 
 选择以上两种方式中的哪一种，取决于 Java 堆内存是否规整。而 Java 堆内存是否规整，取决于 GC 收集器的算法是"标记-清除"，还是"标记-整理"（也称作"标记-压缩"），值得注意的是，复制算法内存也是规整的
 
-![内存分配的两种方式](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/内存分配的两种方式.png)
+![内存分配的两种方式](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D.jpg)
 
 **内存分配并发问题（补充内容，需要掌握）**
 
@@ -257,11 +257,11 @@ JDK1.4 中新加入的 **NIO(New Input/Output) 类**，引入了一种基于**�
 
 1. **句柄：** 如果使用句柄的话，那么 Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息；
 
-  ![对象的访问定位-使用句柄](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/对象的访问定位-使用句柄.png)
+  ![对象的访问定位-使用句柄](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%AF%B9%E8%B1%A1%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D_%E5%8F%A5%E6%9F%84.jpg)
 
 2. **直接指针：**  如果使用直接指针访问，那么 Java 堆对象的布局中就必须考虑如何放置访问类型数据的相关信息，而 reference 中存储的直接就是对象的地址。
 
-![对象的访问定位-直接指针](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/对象的访问定位-直接指针.png)
+![对象的访问定位-直接指针](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%AF%B9%E8%B1%A1%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D_%E7%9B%B4%E6%8E%A5%E6%8C%87%E9%92%88.jpg)
 
 **这两种对象访问方式各有优势。使用句柄来访问的最大好处是 reference 中存储的是稳定的句柄地址，在对象被移动时只会改变句柄中的实例数据指针，而 reference 本身不需要修改。使用直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销。**
 
@@ -289,7 +289,7 @@ System.out.println(str2==str3);//false
 
 再给大家一个图应该更容易理解，图片来源：<https://www.journaldev.com/797/what-is-java-string-pool>：
 
-![String-Pool-Java](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-3String-Pool-Java1-450x249.png)
+![String-Pool-Java](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E5%AF%B9%E8%B1%A1.jpg)
 
 **String 类型的常量池比较特殊。它的主要使用方法有两种：**
 
@@ -317,7 +317,7 @@ System.out.println(str2==str3);//false
 		  System.out.println(str3 == str5);//true
 		  System.out.println(str4 == str5);//false
 ```
-![](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/字符串拼接.png)
+![](https://github.com/1367379258/BigDataEd/blob/master/java/photo/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5.jpg)
 
 尽量避免多个字符串拼接，因为这样会重新创建对象。如果需要改变字符串的话，可以使用 StringBuilder 或者 StringBuffer。
 ### 4.2 String s1 = new String("abc");这句话创建了几个字符串对象？
