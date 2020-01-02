@@ -84,8 +84,8 @@ Java 堆是垃圾收集器管理的主要区域，因此也被称作**GC 堆（G
 在测试之前我们先来看看 **Minor GC 和 Full GC 有什么不同呢？**
 
 - **新生代 GC（Minor GC）**:指发生新生代的的垃圾收集动作，Minor GC 非常频繁，回收速度一般也比较快。
-- **老年代 GC（Major GC/Full GC）**:指发生在老年代的 GC，出现了 Major GC 经常会伴随至少一次的 Minor GC（并非绝对），Major GC 的速度一般会比 Minor GC 的慢 10 倍以上。
-
+- **老年代 GC（Major GC/**:指发生在老年代的 GC，出现了 Major GC 经常会伴随至少一次的 Minor GC（并非绝对），Major GC 的速度一般会比 Minor GC 的慢 10 倍以上。
+- **Full GC** ：整体收集 ， 收集整个Java堆和方法区的垃圾回收。
 **测试：**
 
 ```java
