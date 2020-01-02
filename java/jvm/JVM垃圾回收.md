@@ -324,12 +324,12 @@ Parallel Scavenge 收集器类似于 ParNew 收集器。 **那么它有什么特
 ```
 -XX:+UseParallelGC 
 
-    使用 Parallel 收集器+ 老年代串行
-
+    使用 Parallel 收集器+ 老年代串行(serial-收集器单线程)
+	Parallel Scavenge使用方式：该收集器是server模式下的默认收集器，也可-XX:+UseParallelGC强制使用该收集器，打开该收集器后，将使用Parallel Scavenge（年轻代）+Serial Old(老年代)的组合进行GC。
 -XX:+UseParallelOldGC
 
-    使用 Parallel 收集器+ 老年代并行
-
+    使用 Parallel 收集器+ 老年代并行(Parallel-old多线程)
+	Parallel Old使用方式：-XX:+UseParallelOldGC，打开该收集器后，将使用Parallel Scavenge（年轻代）+Parallel Old（老年代）的组合进行GC。
 ```
 
 **Parallel Scavenge 收集器关注点是吞吐量（高效率的利用 CPU）。CMS 等垃圾收集器的关注点更多的是用户线程的停顿时间（提高用户体验）。所谓吞吐量就是 CPU 中用于运行用户代码的时间与 CPU 总消耗时间的比值。** Parallel Scavenge 收集器提供了很多参数供用户找到最合适的停顿时间或最大吞吐量，如果对于收集器运作不太了解的话，手工优化存在的话可以选择把内存管理优化交给虚拟机去完成也是一个不错的选择。
