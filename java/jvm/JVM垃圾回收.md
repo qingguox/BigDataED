@@ -285,7 +285,14 @@ JDK1.2 以后，Java 对引用的概念进行了扩充，将引用分为强引�
 
 ![垃圾收集器分类](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/垃圾收集器.jpg)
 
-![]()
+![](https://github.com/1367379258/BigDataEd/blob/master/java/jvm/photo/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8F%8A%E5%85%B6%E5%AF%B9%E5%BA%94jdk%E7%89%88%E6%9C%AC.png)
+
+- **注意**：
+	1.7 1.8 都是用的是 Parallel（新生代） + ParallelOld（老年代）
+	1.9 是使用了 g1-收集器  淡化 分代 采用region分区
+	java -XX:+PrintGCDetails vmid
+	java -XX:+PrintCommandLineFlags -version vmid
+	jinfo -flag UseParallelGC vmid
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/c625baa0-dde6-449e-93df-c3a67f2f430f.jpg" width=""/> </div><br>
 
